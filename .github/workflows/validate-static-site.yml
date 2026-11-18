@@ -1,0 +1,26 @@
+name: Validate static learning site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'scripts/check_static_links.py'
+      - '.github/workflows/validate-static-site.yml'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'scripts/check_static_links.py'
+      - '.github/workflows/validate-static-site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate local routes and assets
+        run: python3 scripts/check_static_links.py docs
