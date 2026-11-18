@@ -3,27 +3,29 @@
 Public technical learning site and interactive engineering laboratory.
 
 ## Links
-- Source repository: https://github.com/tjz12345/learning-hub
-- Planned GitHub Pages URL: https://tjz12345.github.io/learning-hub/
-- Private knowledge source: a separate, non-public repository. Never copy raw private notes here.
+- Website (when Pages deployment is live): https://tjz12345.github.io/learning-hub/
+- Repository: https://github.com/tjz12345/learning-hub
+- Private source of proposed notes: `tjz12345/personal-knowledge_hub` (private, not published).
 
-## Site layout
-Static HTML is currently published from `docs/` on `main`:
-- `docs/index.html`: new learning portal
-- `docs/cryptography/index.html`: cryptography interactive textbook
-- `docs/learning-lab/index.html`: engineering laboratory
-- `docs/learning-lab/electricity-foundations/index.html`: electronics foundations
-- `docs/buck-5v/index.html`: Buck converter interactive lesson
+## Current site source
+The site is served from the **repository root** on `main`, not from `docs/`.
+The initial Pages deployment returned 404 because it published the root while HTML files existed only under `docs/`. This was corrected by placing the complete site at the root.
 
-## Publish
-1. Visit Settings -> Pages.
-2. Select **Deploy from a branch**.
-3. Choose branch **main** and folder **/docs**.
-4. Save. Verify the live Pages URL.
-5. After review, merge only vetted website changes into `main`.
+Canonical pages:
+- `index.html` -> `/`: learning portal
+- `cryptography/index.html` -> `/cryptography/`
+- `learning-lab/index.html` -> `/learning-lab/`
+- `learning-lab/electricity-foundations/index.html` -> `/learning-lab/electricity-foundations/`
+- `buck-5v/index.html` -> `/buck-5v/`
 
-Existing content was copied from the `gh-pages` branch of
-`tjz12345/image-prompt-reverse` without deleting or modifying the source.
+The `docs/` directory is a temporary migration snapshot. **Edit root pages** for future updates; do not edit `docs/` as the primary source. Remove snapshots only after site verification.
 
-A future Astro + Starlight build may replace static `docs/` publishing
-once the initial migration is verified.
+## Pages settings
+Under Settings -> Pages:
+- Source: **Deploy from a branch**
+- Branch: `main`
+- Folder: `/(root)`
+
+## Validation
+The GitHub Actions workflow validates root landing-page existence and local page links.
+The original pages in `tjz12345/image-prompt-reverse` remain untouched.
