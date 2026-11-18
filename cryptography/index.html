@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0b2335"/>
+<meta name="description" content="从 AES、RSA、ECC 到 Shor、Grover 和后量子密码：可交互、可离线的费曼式密码学图解教材。"/>
+<title>从一把钥匙到量子计算｜密码学费曼学习实验室</title>
+<style>
+:root{--ink:#15243a;--ink2:#30435a;--muted:#63748a;--line:#dce5ed;--paper:#f7f9fb;--white:#ffffff;--navy:#091b2e;--teal:#008c88;--teal2:#dcf4ed;--blue:#2465ae;--gold:#a46a19;--amber:#fff3da;--violet:#7651b1;--purple:#f0eafa;--red:#b64b4b;--red-bg:#fff0eb;--green:#14644a;--green-bg:#e9f7ec;--shadow:0 19px 60px rgba(15,34,61,.09);--r:20px;--max:1060px}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif;background:var(--paper);font-size:15.5px;line-height:1.86;letter-spacing:.05px} button,input,textarea{font:inherit}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #5ed1ce;outline-offset:3px}svg{max-width:100%}::selection{background:#b9e7df} .sr-only{position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden}
+.progress-line{position:fixed;left:0;right:0;top:0;height:4px;z-index:100;background:#d6e5eb}.progress-line>div{width:0;height:100%;background:linear-gradient(90deg,#07b7b6,#2e7bce)}
+.sidebar{position:fixed;top:4px;left:0;bottom:0;width:250px;border-right:1px solid var(--line);background:#ffffff;z-index:12;display:flex;flex-direction:column;padding:29px 15px 17px;overflow-y:auto;scrollbar-width:thin}.brand{display:flex;align-items:center;gap:11px;padding:0 13px 28px;color:var(--ink);font-size:15px;font-weight:760;letter-spacing:-.3px;line-height:1.3}.brand-logo{width:37px;height:37px;display:grid;place-items:center;background:#0c2937;color:#9ff5d8;border-radius:11px;font-size:23px}.brand small{display:block;color:var(--muted);font-size:11px;font-weight:500;letter-spacing:.4px;margin-top:3px}.nav-section{margin:18px 12px 8px;color:#8a98a8;font-size:10px;font-weight:790;letter-spacing:1.3px}.nav a{display:flex;align-items:center;gap:10px;border-radius:10px;padding:9px 12px;color:#465870;font-size:12.5px;line-height:1.35;transition:.15s;background:transparent}.nav a:hover{background:#f0f4f7;text-decoration:none}.nav a.active{color:#007978;background:#e8f7f4;font-weight:750}.nav .num{width:21px;color:#9baaba;font-weight:750;font-size:10px;flex:none}.nav a.active .num{color:#007978}.sidefooter{margin-top:auto;padding:20px 12px 8px;border-top:1px solid var(--line)}.sidefooter p{font-size:11.8px;line-height:1.6;color:var(--muted);margin:8px 0}.study-progress{height:7px;background:#e9eff2;border-radius:100px;overflow:hidden}.study-progress>span{display:block;height:100%;width:0;background:var(--teal);transition:width .3s}.small-muted{font-size:11px;color:var(--muted)}
+.shell{margin-left:250px;min-width:0}.content{max-width:var(--max);padding:0 56px;margin:0 auto}.hero{background:radial-gradient(circle at 88% 6%,rgba(59,163,188,.16),transparent 36%),radial-gradient(circle at 30% 110%,rgba(36,101,174,.25),transparent 50%),linear-gradient(137deg,#071625,#102b42 70%,#17354a);color:#fff;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;top:55px;right:-150px;width:580px;height:580px;border-radius:50%;border:1px solid rgba(144,220,213,.2);box-shadow:0 0 0 55px rgba(144,220,213,.024),0 0 0 110px rgba(144,220,213,.02),0 0 0 180px rgba(144,220,213,.018);pointer-events:none}.hero .content{padding-top:86px;padding-bottom:86px;position:relative;z-index:1}.edition{display:inline-flex;align-items:center;gap:9px;color:#b7e5e7;letter-spacing:1.45px;font-size:11px;text-transform:uppercase;font-weight:750}.edition:before{content:"";width:25px;height:1px;background:#7ae0d3}.hero h1{font-size:clamp(38px,5.1vw,69px);line-height:1.18;letter-spacing:-2.5px;font-weight:760;margin:28px 0 22px;max-width:740px}.hero h1 em{font-style:normal;color:#72e1d1}.hero-lead{font-size:17px;line-height:1.9;color:#c4d4e4;max-width:650px;margin-bottom:34px}.hero-pills{display:flex;gap:11px;flex-wrap:wrap}.hero-pills a{border:1px solid rgba(211,236,241,.22);color:#d5f5ef;border-radius:30px;padding:7px 16px;font-size:12px;background:rgba(255,255,255,.045)}.hero-pills a:hover{background:rgba(255,255,255,.15);text-decoration:none}.hero-foot{display:flex;gap:26px;flex-wrap:wrap;margin-top:55px;padding-top:24px;border-top:1px solid rgba(222,241,246,.16);color:#a8c3d3;font-size:12px}.hero-foot b{color:#fff;font-weight:740}
+.road{padding-top:66px;padding-bottom:38px}.overline{font-size:11px;letter-spacing:1.7px;color:var(--teal);font-weight:800;text-transform:uppercase}.section-title{font-weight:760;font-size:clamp(25px,3vw,34px);letter-spacing:-.8px;line-height:1.37;margin:8px 0 12px}.lead{font-size:16px;color:#506178;max-width:800px;line-height:1.9}.maprail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:25px 0 15px}.mapitem{border:1px solid var(--line);border-radius:13px;background:white;padding:17px 15px;min-height:123px;position:relative}.mapitem b{display:block;line-height:1.35;font-size:14px}.mapitem span{font-size:12px;color:var(--muted);display:block;margin-top:7px;line-height:1.5}.mapitem i{font-style:normal;font-weight:800;color:#0b9089;font-size:12px;display:block;margin-bottom:9px}.mapitem:not(:last-child):after{content:"→";position:absolute;right:-14px;top:44%;z-index:1;color:#53a3a1;background:var(--paper);border-radius:50%;font-weight:800;padding:2px}.quiet{font-size:13px;color:var(--muted);margin:11px 0}.mainbody{padding-bottom:90px}
+.chapter{padding:78px 0 16px;scroll-margin-top:25px;border-top:1px solid var(--line)}.chapter:first-of-type{border-top:0}.chapter-header{display:grid;grid-template-columns:1fr auto;align-items:start;gap:24px;margin-bottom:30px}.chapter-mark{font-size:11px;letter-spacing:1.7px;font-weight:800;color:var(--teal);text-transform:uppercase}.chapter h2{font-size:clamp(28px,3.3vw,41px);line-height:1.3;letter-spacing:-1.2px;margin:10px 0 10px;font-weight:790}.chapter-header p{max-width:690px;font-size:15.3px;line-height:1.8;color:#556880;margin:0}.chapter-icon{border-radius:18px;min-width:76px;width:76px;height:76px;display:grid;place-items:center;font-size:35px;background:#e8f2f8;color:var(--blue);font-weight:800}.chapter-icon.safe{background:#e2f3eb;color:var(--green)}.chapter-icon.warn{background:#fff1e1;color:#a06d27}.chapter-icon.pqc{background:#ece6fa;color:#7651b1}.chapter h3{font-size:20px;line-height:1.48;margin:34px 0 10px;letter-spacing:-.4px}.chapter p{margin:10px 0 15px}.chapter strong,.chapter b{font-weight:760}.chapter ul{padding-left:22px;margin:12px 0}.chapter li{margin:5px 0}.mini{font-size:12px;color:var(--muted)}.tag{display:inline-block;font-size:11px;color:#215c70;background:#ecf6f7;border-radius:7px;padding:3px 9px;line-height:1.6;font-weight:750;letter-spacing:.25px}.tag.red{color:var(--red);background:var(--red-bg)}.tag.green{color:var(--green);background:var(--green-bg)}.tag.purple{color:var(--violet);background:var(--purple)}.tag.orange{color:#9b641b;background:var(--amber)}.formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:clamp(14px,1.8vw,19px);font-weight:620;padding:15px 20px;border-radius:12px;background:#f0f5f8;overflow-x:auto;color:#153451;margin:13px 0}.highlight{background:#e8f6ee;box-decoration-break:clone;border-radius:4px;padding:1px 5px;color:#115b46;font-weight:760}.warm-highlight{background:#fff0d0;padding:1px 5px;color:#87590e}.lab{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:27px 30px;margin:23px 0 26px;box-shadow:0 7px 24px rgba(35,62,88,.035)}.lab-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:23px;flex-wrap:wrap}.lab-title{font-size:16px;font-weight:790;line-height:1.4}.lab-desc{font-size:13px;color:var(--muted);margin:-13px 0 16px;line-height:1.75}.lab small{color:var(--muted)}.diagram-caption{font-size:12px;line-height:1.8;color:#77869a;margin-top:16px;border-top:1px solid #e6edf0;padding-top:12px}.story{border-left:4px solid #319fa0;padding:14px 19px 14px 22px;background:#edf8f7;border-radius:0 12px 12px 0;margin:20px 0;line-height:1.8}.story strong{color:#087474}.warning{border-left:4px solid #e2a34f;background:#fffbef;padding:14px 19px 14px 22px;border-radius:0 12px 12px 0;font-size:13px;color:#694f2d;line-height:1.8;margin:17px 0}.linegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:21px;align-items:stretch}.slimbox{border:1px solid var(--line);border-radius:14px;padding:18px 19px;min-width:0;background:#fff}.slimbox.tint{background:#f1f8f8}.slimbox h4{font-size:15px;margin:0 0 10px}.slimbox p{font-size:13px;margin:5px 0;color:#61718a}.number-value{font-size:clamp(26px,3vw,41px);font-weight:830;letter-spacing:-1.3px;line-height:1.35;color:#136d69;font-variant-numeric:tabular-nums}.number-sub{font-size:11px;color:var(--muted)}.flowline{display:flex;align-items:stretch;gap:9px;flex-wrap:wrap}.flowstep{border:1px solid #d5e5e9;background:#f2f7fa;padding:16px 12px;min-width:90px;text-align:center;border-radius:13px;flex:1;font-size:13px;font-weight:720;line-height:1.5}.flowstep small{display:block;font-size:10px;line-height:1.55;font-weight:500;color:#687c91;margin-top:5px}.flowstep.on{border-color:#73c2b4;background:#dcf5e9;color:#136852}.flowarrow{display:grid;place-items:center;flex:0 0 14px;color:#72a0ae;font-size:21px;font-weight:800}.two-people{display:grid;grid-template-columns:1fr 125px 1fr;gap:14px;align-items:center}.person{border-radius:14px;border:1px solid #d3e5ea;background:#f3f8fa;padding:18px 12px;text-align:center;min-width:0}.person.bob{background:#f6f2fb;border-color:#e4d7f3}.person b{display:block;font-size:16px}.person small{display:block;font-size:11px;line-height:1.7}.transfer{font-weight:760;font-size:11px;color:#647d8c;text-align:center}.transfer .arr{display:block;color:#0b8c8a;font-size:25px;line-height:1.2}.live-control{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:17px 18px;border-radius:12px;background:#f3f7f9;margin:17px 0}.live-control label{font-weight:700;font-size:13px;color:#44576c}.live-control input[type=range]{flex:1;min-width:110px;accent-color:var(--teal)}.live-control input[type=text],.live-control input[type=number],.live-control textarea{background:white;border:1px solid #ccd9df;color:#19354a;border-radius:7px;padding:7px 11px;min-width:80px;max-width:100%}.live-control output{min-width:48px;border-radius:6px;background:#dbf3e8;padding:3px 10px;color:#00685a;text-align:center;font-weight:800;font-variant-numeric:tabular-nums}.math-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:14px 0}.math-step{padding:15px;border:1px solid var(--line);border-radius:11px;background:#fbfdfd}.math-step .caption{font-size:11px;color:#657c8e;display:block}.math-step .math{font-size:18px;display:block;font-weight:800;color:#21415d;margin-top:7px;font-family:ui-monospace,monospace;line-height:1.4;overflow-wrap:anywhere}.bitline{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:10px;margin:10px 0;font-size:12px}.bitlabel{color:#65788b;font-weight:740}.bits{font-family:ui-monospace,Consolas,monospace;letter-spacing:6px;white-space:nowrap;overflow-x:auto;font-size:20px;font-weight:750;color:#173753}.bits b{color:var(--teal)}.matrix{display:grid;grid-template-columns:repeat(4,34px);gap:4px}.matrix span{display:grid;place-items:center;width:34px;height:34px;background:#e8f2f6;border:1px solid #cfdee4;border-radius:5px;font-size:12px;font-family:monospace;font-weight:750;color:#23536c}.matrix span:nth-child(4n+2){background:#eaf1fa}.matrix span.hot{background:#c1eadb;border-color:#9dd4c1;color:#005b53}.matrix-row{display:flex;align-items:center;gap:15px;justify-content:center;flex-wrap:wrap}.matrix-indicator{font-size:24px;color:#7ca6a2}.btn{border:none;background:#102e40;color:#fff;padding:10px 18px;border-radius:10px;font-weight:760;font-size:12.5px}.btn:hover{background:#18506b}.btn.secondary{background:#e9f3f3;color:#08756f}.btn.secondary:hover{background:#d7ebeb}.btn.tiny{padding:7px 12px;font-size:12px}.statpill{padding:7px 11px;background:#eef5f8;border-radius:8px;color:#33536c;font-size:12px}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.digest{font-family:ui-monospace,Consolas,monospace;background:#122939;color:#9ee3d0;word-break:break-all;border-radius:10px;padding:15px 17px;font-size:14px;line-height:1.85;letter-spacing:1px;min-height:78px}.digest.alt{background:#1b314c;color:#ffcd90}.entry{width:100%;min-height:42px;background:white;border:1px solid #cbdbe3;border-radius:8px;padding:10px 12px;font-size:13px}.threat{display:flex;align-items:center;gap:15px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px 19px;margin:15px 0}.threat strong{display:block;font-size:14px}.threat p{margin:3px 0 0;font-size:12.5px;color:#65798b}.threat-icon{display:grid;place-items:center;font-size:22px;width:46px;height:46px;flex:none;border-radius:12px;background:#ecf3f5}.threat.bad{border-color:#f2d1cc}.threat.bad .threat-icon{background:#ffebe7}.threat.ok .threat-icon{background:#e7f5ec}.threat.mid .threat-icon{background:#fff1da}
+.feynman{margin:30px 0 0;background:#102738;color:#e6f6f3;padding:28px;border-radius:18px;position:relative;overflow:hidden}.feynman:before{content:'"';position:absolute;top:-37px;right:13px;color:rgba(137,218,197,.1);font-size:190px;font-family:Georgia;line-height:1}.feynman h4{font-size:16px;margin:0 0 10px;color:#a3f1dc;letter-spacing:0}.feynman p{margin:7px 0 15px;color:#d5e5e8;font-size:13.5px;max-width:700px}.feynman textarea{min-height:97px;width:100%;background:#1b3849;border:1px solid #456273;border-radius:10px;padding:13px;color:#fff;font-size:13.5px;resize:vertical;outline-color:#80e0d4}.feynman textarea::placeholder{color:#93adbd}.feynman-bottom{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:12px;flex-wrap:wrap}.feynman-bottom .saved{color:#a6c2cf;font-size:12px}.master-btn{background:#9be6d4;color:#064e46;padding:9px 14px;border:none;border-radius:9px;font-weight:780;font-size:12px}.master-btn.mastered{background:#244d4c;color:#a2ecda;border:1px solid #4c9c87}.think{border:1px solid #d8e5eb;border-radius:12px;margin-top:15px;background:#fff;overflow:hidden}.think summary{font-size:13px;cursor:pointer;padding:13px 17px;font-weight:750;display:list-item;list-style-position:inside}.think p{margin:0;padding:0 17px 16px;font-size:12.5px;color:#5a7085}.think[open] summary{color:#08766e}.figure{position:relative;border:1px solid var(--line);border-radius:14px;background:#fbfcff;padding:16px;overflow:hidden}.curveplot{width:100%;height:300px;display:block;background:#f8fbfd;border-radius:12px;border:1px solid #e4ebf0}.curveplot text{font-size:10px;font-family:ui-monospace,monospace;fill:#667c8d}.curvepoint{cursor:pointer}.curvepoint:hover{opacity:.7}.period-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-top:17px}.periodcell{min-width:0;border:1px solid #dfebf0;border-radius:9px;text-align:center;padding:9px 2px;background:#f5f8fb}.periodcell strong{display:block;color:#355c71;font-size:15px}.periodcell span{display:block;color:#7d8e9f;font-size:10px}.periodcell.on{background:#ddf4e9;border-color:#94d8be}.periodcell.repeat{background:#fff0de;border-color:#e7b46a}.searchgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;max-width:340px;margin:0 auto 13px}.searchcell{aspect-ratio:1;border-radius:12px;border:1px solid #d8e4ea;background:#e7eef3;display:grid;place-items:center;font-size:22px;color:#7c8fa4;transition:.25s}.searchcell.target{background:#e1f6e8;border:2px solid #50a483;color:#006950;box-shadow:0 6px 21px rgba(9,126,90,.1)}.bar-track{height:13px;border-radius:20px;background:#ebf1f5;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,#16ada1,#177c94);width:0;transition:width .35s}.grid-table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.6;margin:18px 0;overflow:hidden}.grid-table th,.grid-table td{text-align:left;border-bottom:1px solid #dce6eb;padding:13px 14px;vertical-align:top}.grid-table th{color:#526881;background:#f0f5f7;font-size:12px}.grid-table td:first-child{font-weight:710}.grid-table tr:nth-child(even) td{background:#fbfdfd}.sources{border-top:1px solid var(--line);padding:65px 0 95px}.sources ol{padding-left:20px;color:#526478;font-size:13px;line-height:1.85}.sources li{margin:7px 0}.questions .question{border:1px solid var(--line);background:#fff;border-radius:14px;padding:20px 23px;margin:15px 0}.question p{font-size:14px;font-weight:780;margin:0 0 13px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}.choice{background:#f5f8fa;border:1px solid #dce7ec;border-radius:8px;padding:9px 13px;color:#43566b;text-align:left;font-size:12.5px;line-height:1.5}.choice:hover{background:#e7f3f4}.choice.chosen{border-color:#298f8a;background:#ddf4ef}.choice.wrong{border-color:#d9958b;background:#fff0ed}.quiz-result{color:#476376;font-size:12.5px;margin-top:13px;display:none}.quiz-result.show{display:block}.completion{background:linear-gradient(135deg,#e0f6ed,#eef6ff);padding:23px;border:1px solid #c5e5dc;border-radius:15px;margin:22px 0}.completion strong{font-size:15px}.completion p{margin:5px 0 0;font-size:13px;color:#4c6375}.toggle-menu{display:none}.calloutline{margin:10px 0;color:#5e7186;font-size:13px}.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.timeline>div{padding:18px;background:#fff;border:1px solid var(--line);border-radius:13px}.timeline .time{font-size:11px;color:#9b671d;font-weight:800}.timeline strong{display:block;font-size:15px;margin:7px 0}.timeline p{font-size:12px;margin:0;color:#64748a}.merkle-stage{position:relative;width:100%;border-radius:14px;background:#f7fafb;border:1px solid #e0eaed;overflow:hidden;min-height:265px}.merkle-stage svg{width:100%;height:265px}.merkle-stage text{font-family:ui-monospace,Consolas,monospace;fill:#304b5f;font-size:12px}.merkle-stage .node{fill:#e4eef3;stroke:#aec5d1;stroke-width:1.5}.merkle-stage .selected{fill:#d6f4df;stroke:#389d72;stroke-width:2.5}.merkle-stage .auth{fill:#fff1d8;stroke:#d59635;stroke-width:2}.merkle-stage line{stroke:#aabfc9;stroke-width:1.8}.merkle-stage line.selected{stroke:#379c7a;stroke-width:3}.source-date{font-size:12px;color:#7a8d9c}.lookup{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.lookup b{font-size:13px}.abbr{font-size:11px;display:inline-block;color:#677b8d;background:#edf3f7;padding:5px 10px;border-radius:7px;margin:4px 4px 4px 0}
+@media(max-width:1120px){.sidebar{width:216px}.shell{margin-left:216px}.content{padding-left:35px;padding-right:35px}.hero h1{font-size:clamp(36px,5vw,63px)}}
+@media(max-width:870px){.sidebar{display:none;top:56px;width:min(320px,88vw);box-shadow:8px 0 20px rgba(10,40,60,.14)}.sidebar.show{display:flex}.shell{margin-left:0}.toggle-menu{display:flex;align-items:center;position:sticky;top:0;z-index:30;background:rgba(248,251,252,.95);backdrop-filter:blur(12px);padding:12px 22px;gap:12px;border-bottom:1px solid #dfe7ee}.toggle-menu button{border:none;border-radius:8px;background:#15384a;color:white;padding:7px 12px;font-size:12px}.content{padding-left:34px;padding-right:34px}.hero .content{padding-top:72px;padding-bottom:65px}.hero h1{font-size:46px}.chapter{scroll-margin-top:60px}.maprail{grid-template-columns:repeat(2,1fr)}.mapitem:after{display:none}}
+@media(max-width:600px){body{font-size:14px}.content{padding-left:20px;padding-right:20px}.hero h1{font-size:39px;letter-spacing:-1.2px}.hero .content{padding-top:54px;padding-bottom:54px}.hero-lead{font-size:14.5px}.hero-foot{gap:12px}.chapter{padding-top:59px}.chapter-header{grid-template-columns:1fr 55px}.chapter-icon{width:54px;min-width:54px;height:54px;font-size:27px}.chapter h2{font-size:28px}.chapter h3{font-size:18px}.maprail{grid-template-columns:1fr 1fr;gap:9px}.mapitem{padding:13px 12px;min-height:105px}.mapitem b{font-size:12.5px}.mapitem span{font-size:11px}.lab{padding:20px 17px}.lab-top{margin-bottom:16px}.split,.linegrid,.math-steps,.timeline{grid-template-columns:1fr}.flowline{gap:6px}.flowstep{padding:11px 6px;min-width:67px;font-size:10px}.flowarrow{flex:0 0 10px;font-size:13px}.two-people{grid-template-columns:1fr 47px 1fr;gap:4px}.person{padding:12px 4px}.person b{font-size:13px}.transfer{font-size:10px}.matrix{grid-template-columns:repeat(4,28px);gap:3px}.matrix span{height:28px;width:28px;font-size:10px}.matrix-row{gap:6px}.period-grid{gap:2px}.periodcell strong{font-size:12px}.periodcell span{font-size:9px}.periodcell{padding:7px 0}.choices{grid-template-columns:1fr}.grid-table th,.grid-table td{padding:9px 8px;font-size:11px}.feynman{padding:22px 17px}.bits{font-size:13px;letter-spacing:3px}.formula{padding:12px;font-size:12px}.curveplot{height:250px}}
+@media print{.sidebar,.toggle-menu,.progress-line,.master-btn,.live-control input,.btn,.feynman textarea{display:none!important}.shell{margin:0}.content{max-width:100%;padding:0 20px}.hero{color:#172b3d;background:#fff}.hero h1 em{color:#217a78}.hero-lead,.hero-foot{color:#34495c}.chapter{break-inside:avoid-page;page-break-inside:avoid}.lab,.feynman{break-inside:avoid-page}.feynman{color:#172b3d;background:#f1f6f8}.feynman h4,.feynman p{color:#21485d}}
+
+</style>
+</head><body>
+<div class="progress-line"><div id="readingProgress"></div></div>
+<div class="toggle-menu"><button id="menuToggle" aria-expanded="false" aria-controls="sidebar">☰ 目录</button><b>密码学 · 量子时代</b><span class="small-muted" id="mobileProgress" style="margin-left:auto">0 / 12</span></div>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="#top"><span class="brand-logo">◈</span><span>密码学实验室<small>CRYPTOGRAPHY / FEYNMAN</small></span></a>
+  <nav class="nav" aria-label="学习章节">
+    <div class="nav-section">建立地图</div>
+    <a href="#map"><span class="num">00</span>密码学到底在保护什么</a>
+    <div class="nav-section">经典密码工具</div>
+    <a href="#aes"><span class="num">01</span>AES · 对称加密</a>
+    <a href="#rsa"><span class="num">02</span>RSA · 公钥加密</a>
+    <a href="#ecc"><span class="num">03</span>ECC · 椭圆曲线</a>
+    <a href="#ecdh"><span class="num">04</span>ECDH · 密钥协商</a>
+    <a href="#ecdsa"><span class="num">05</span>ECDSA · 数字签名</a>
+    <a href="#sha"><span class="num">06</span>SHA-256 · 内容指纹</a>
+    <a href="#hmac"><span class="num">07</span>HMAC · 可信认证</a>
+    <div class="nav-section">量子冲击</div>
+    <a href="#shor"><span class="num">08</span>Shor · 寻找周期</a>
+    <a href="#grover"><span class="num">09</span>Grover · 振幅放大</a>
+    <div class="nav-section">后量子密码</div>
+    <a href="#mlkem"><span class="num">10</span>ML-KEM · 格密码建密钥</a>
+    <a href="#mldsa"><span class="num">11</span>ML-DSA · 格密码签名</a>
+    <a href="#slhdsa"><span class="num">12</span>SLH-DSA · 哈希树签名</a>
+    <div class="nav-section">综合应用</div>
+    <a href="#migration"><span class="num">13</span>TLS 与 SoC 安全迁移</a>
+    <a href="#final"><span class="num">14</span>闭卷测试 · 费曼复述</a>
+    <a href="#references"><span class="num">15</span>标准与参考资料</a>
+  </nav>
+  <div class="sidefooter"><div class="lookup"><b>学习进度</b><span class="small-muted" id="progressFraction">0 / 12</span></div><div class="study-progress" style="margin-top:9px"><span id="masteryBar"></span></div><p>填写自己的解释，点击「我能讲清楚」。复述将尝试保存在当前浏览器。</p><button class="btn tiny secondary" id="exportNotes">导出我的学习笔记 ↓</button></div>
+</aside>
+<div class="shell" id="top">
+<header class="hero"><div class="content">
+  <div class="edition">INTERACTIVE LEARNING · 2026 EDITION</div>
+  <h1>从一把钥匙，<br/>到<em>量子计算</em>。</h1>
+  <div class="hero-lead">RSA 为什么相信大数难分解？ECC 为什么用曲线藏住秘密？量子计算又为什么改变游戏规则？不靠背概念，用图、算例和小实验，把这些问题一件件讲清楚。</div>
+  <div class="hero-pills"><a href="#aes">从 AES 开始</a><a href="#shor">直接看量子威胁</a><a href="#mlkem">看后量子方案</a></div>
+  <div class="hero-foot"><span><b>12</b> 个核心算法专题</span><span><b>9</b> 个可操作演示</span><span><b>离线可用</b> · 无外部依赖</span><span><b>讲清楚</b>，才算真懂</span></div>
+</div></header>
+<div class="content mainbody">
+<section class="road" id="map">
+  <div class="overline">00 / BEFORE WE BEGIN</div>
+  <h2 class="section-title">密码学并不是只有“加密”这一件事</h2>
+  <p class="lead">想象你要给远方朋友寄一封秘密信：你要避免别人偷看、篡改、冒充，还得解决“双方怎么拥有同一把钥匙”。每一类密码工具只负责其中一部分。</p>
+  <div class="maprail">
+    <div class="mapitem"><i>01 · CONFIDENTIALITY</i><b>让内容看不懂</b><span>AES / SM4 / ChaCha20<br/>真正加密大量数据</span></div>
+    <div class="mapitem"><i>02 · KEY ESTABLISHMENT</i><b>让双方得到钥匙</b><span>ECDH / ML-KEM<br/>在公开信道建立秘密</span></div>
+    <div class="mapitem"><i>03 · AUTHENTICITY</i><b>证明消息来自谁</b><span>ECDSA / RSA-PSS / ML-DSA<br/>签名与身份验证</span></div>
+    <div class="mapitem"><i>04 · FINGERPRINT</i><b>快速识别内容变化</b><span>SHA-256 / SHA-3<br/>固定长度内容指纹</span></div>
+  </div>
+  <div class="story"><b>先建立一个正确的大局观：</b>HTTPS 里通常是“证书与签名认证身份 → 公钥机制建立共享密钥 → AES-GCM 或 ChaCha20-Poly1305 保护数据”。量子计算重点冲击公钥机制，并不意味着所有 AES 加密都会随之失效。</div>
+  <p class="quiet">每章遵循四步：<b>先说人话 → 看原理图 → 动手算一次 → 不看答案自己讲</b>。文中的小数字只为教学，绝不能用于真实密码系统。</p>
+</section>
+
+<section class="chapter" id="aes" data-key="aes">
+  <div class="chapter-header"><div><div class="chapter-mark">01 / SYMMETRIC ENCRYPTION</div><h2>AES｜双方共用一把钥匙</h2><p>要保护一份 10GB 的文件，怎样又快又可靠地把它变成只有持钥者才能读懂的数据？</p></div><div class="chapter-icon safe">▦</div></div>
+  <div class="story"><strong>一句人话：</strong>AES 像一台有秘密设置的搅拌机。同一把密钥决定它怎样把每个 128 位数据块反复替换、打散、混合；知道密钥的人才可以按逆操作还原。</div>
+  <h3>真正的 AES 并不是“异或一次”</h3>
+  <p>AES 每次处理 <b>128 bit = 16 Byte</b> 的数据块，将它排成 4 × 4 的状态矩阵。AES-128、AES-192、AES-256 的密钥长度不同，对应分别执行 <b>10 / 12 / 14 轮</b>。输入还会先执行一次 AddRoundKey；最后一轮不做 MixColumns。</p>
+  <div class="lab"><div class="lab-top"><b class="lab-title">图解｜观察一轮 AES 怎样改变 16 个字节</b><span class="tag">原理图</span></div>
+    <div class="flowline">
+      <div class="flowstep">SubBytes<small>每个字节过 S-box<br/>引入非线性</small></div><div class="flowarrow">→</div>
+      <div class="flowstep">ShiftRows<small>行循环移位<br/>改变位置</small></div><div class="flowarrow">→</div>
+      <div class="flowstep">MixColumns<small>列内线性混合<br/>扩散变化</small></div><div class="flowarrow">→</div>
+      <div class="flowstep on">AddRoundKey<small>与本轮子密钥异或<br/>注入秘密</small></div>
+    </div>
+    <div class="split" style="margin-top:20px;align-items:center"><div><h4 style="margin-top:0">16 字节状态矩阵</h4><p class="mini">观察第二步 ShiftRows：每行分别左移 0、1、2、3 个字节。</p><button class="btn secondary tiny" id="shiftToggle">点击：执行 ShiftRows →</button></div><div class="matrix-row"><div class="matrix" id="aesMatrix"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span></div></div></div>
+    <div class="diagram-caption">这里显示的是字节位置的变动，不是 AES 的全部运算。AES 的 16 个字节在规范中的 State 布局按列填充；图中用行展示位置，便于看 ShiftRows。</div>
+  </div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">动手算｜先看懂 AddRoundKey 里的 XOR</b><span class="tag orange">简化模型 ≠ 完整 AES</span></div>
+    <div class="bitline"><span class="bitlabel">输入字节</span><span class="bits" id="xorM">10101010</span></div>
+    <div class="bitline"><span class="bitlabel">秘密字节</span><span class="bits" id="xorK">00110101</span></div>
+    <div class="bitline"><span class="bitlabel">异或结果</span><span class="bits"><b id="xorOut">10011111</b></span></div>
+    <div class="live-control"><label for="xorInput">换一个 8 位密钥</label><input id="xorInput" type="text" value="00110101" maxlength="8" inputmode="numeric" aria-label="8 位二进制密钥"/><span class="small-muted" id="xorStatus">规则：相同为 0，不同为 1</span></div>
+    <p class="mini">同样的两个值再次 XOR，就能还原原数据：<span class="mono">(M ⊕ K) ⊕ K = M</span>。这展示了 AES 轮运算中的一小步，不代表直接 XOR 一个固定密钥就是安全加密。</p>
+  </div>
+  <div class="threat ok"><span class="threat-icon">✓</span><div><strong>量子影响：不会像 RSA 那样结构性失效</strong><p>已知通用的 Grover 搜索在理想模型下可把 AES-256 密钥搜索的查询量级由 2²⁵⁶ 降至 2¹²⁸；真实量子电路和纠错开销非常巨大。</p></div></div>
+  <div class="warning">工程补充：AES 是分组密码；实际通信还需要正确的工作模式。AES-GCM 同时提供机密性与认证，必须妥善管理 nonce，不能随意复用同一密钥下的 nonce。</div>
+  <div class="feynman"><h4>🗣 费曼复述｜教会一个完全没学过的人</h4><p>不用“替换置换网络”“有限域”等词，解释：为什么 AES 不能简单理解为“把每一位和密钥 XOR 一遍”？</p><textarea class="explain" data-key="aes" placeholder="我会这样解释：AES 先……关键不是只有 XOR，而是……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="aes">你的解释只保存在本地浏览器</span><button class="master-btn" data-key="aes">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜为什么知道 AES 算法设计也不能直接解密？</summary><p>安全设计默认算法公开；秘密在高熵密钥中。攻击者即使知道 S-box、轮变换和实现流程，也应无法在可行成本内恢复密钥。实际系统也必须注意密钥泄露、侧信道和 nonce 复用等实现问题。</p></details>
+</section>
+
+<section class="chapter" id="rsa" data-key="rsa">
+  <div class="chapter-header"><div><div class="chapter-mark">02 / ASYMMETRIC CRYPTOGRAPHY</div><h2>RSA｜公钥公开，私钥为什么还安全？</h2><p>你把锁的结构公开给所有人，为什么只有持有私钥的人能打开它？关键不是藏算法，而是某个逆向数学问题非常难。</p></div><div class="chapter-icon">pq</div></div>
+  <div class="story"><strong>一句人话：</strong>把两个很大的质数相乘很容易，但别人只看到乘积，想反推出这两个质数，在经典计算下可能非常困难。RSA 的密钥关系利用了这种不对称性。</div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">图解｜从两个质数生成一对密钥</b><span class="tag">RSA 教学算例</span></div>
+    <div class="flowline"><div class="flowstep">质数 p = 5<br/>质数 q = 11<small>只有持钥方知道</small></div><div class="flowarrow">→</div><div class="flowstep">n = pq = 55<small>φ(n) = 4 × 10 = 40</small></div><div class="flowarrow">→</div><div class="flowstep on">公钥 (e,n) = (3,55)<small>可以公开给任何人</small></div></div>
+    <div class="formula">私钥 d = 27 ，因为 3 × 27 = 81 ≡ 1 (mod 40)</div>
+    <p class="mini">“mod 40”就是除以 40 后看余数。私钥 d 与公钥 e 满足特殊的模运算关系，这使加密和解密可相互配合。</p>
+  </div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">交互实验｜输入一个 0～54 的数字，亲眼看它被加密又解密</b><span class="tag green">可操作</span></div>
+    <div class="live-control"><label for="rsaSlider">明文 m</label><input id="rsaSlider" type="range" min="0" max="54" value="7"/><output id="rsaPlain">7</output></div>
+    <div class="math-steps"><div class="math-step"><span class="caption">明文 m</span><span class="math" id="rsaM">7</span></div><div class="math-step"><span class="caption">公钥加密 c = m³ mod 55</span><span class="math" id="rsaC">13</span></div><div class="math-step"><span class="caption">私钥解密 m = c²⁷ mod 55</span><span class="math" id="rsaBack">7</span></div></div>
+    <div class="diagram-caption">这个例子极小，只是为了让你算得动。真实 RSA 使用大得多的整数，而且必须使用安全编码和填充，例如 RSA-OAEP；不能把这里的“裸 RSA”直接用于生产。</div>
+  </div>
+  <h3>量子计算击中 RSA 的什么地方？</h3>
+  <p>如果获得足够强大的纠错量子计算机，<b>Shor 算法</b>可以通过高效求解周期问题来分解大整数。RSA 依赖的计算困难性因此会受到根本威胁，区别于“穷举快了一点”。</p>
+  <div class="threat bad"><span class="threat-icon">!</span><div><strong>量子影响：根本性威胁</strong><p>传统 RSA 加密和 RSA-PSS 等 RSA 签名都依赖相关整数计算结构。拥有足够能力的量子攻击者可能恢复私钥，从而破坏保密性和签名真实性。</p></div></div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>解释给朋友听：为什么“公开 RSA 公钥”不等于“把解密方法交出去”？量子计算又改变了哪一步？</p><textarea class="explain" data-key="rsa" placeholder="公开的是……秘密与……有关。经典计算难在……量子算法可以……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="rsa"></span><button class="master-btn" data-key="rsa">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜假设两个质数只有 5、11，RSA 真的安全吗？</summary><p>完全不安全。攻击者看到 n=55 就能立即分解成 5×11。RSA 的安全性依赖足够大的参数、正确的填充、密钥保护与实现；小数字只是一张帮助理解的草稿纸。</p></details>
+</section>
+
+<section class="chapter" id="ecc" data-key="ecc">
+  <div class="chapter-header"><div><div class="chapter-mark">03 / ELLIPTIC-CURVE CRYPTOGRAPHY</div><h2>ECC｜用“点的运算”代替大数分解</h2><p>RSA 靠分解难题，ECC 则靠另一种难题：从曲线上的一个起点出发，可以高效算出终点，但别人很难倒推走了多少步。</p></div><div class="chapter-icon">∿</div></div>
+  <div class="story"><strong>一句人话：</strong>假设你在一张特殊地图上按固定规则移动 7 次，很容易知道终点；别人知道起点和终点，却很难推算你究竟移动了多少次。ECC 的“移动”是严格定义的数学点加法，并不是沿曲线走路。</div>
+  <p>典型曲线方程可以写成 <b>y² = x³ + ax + b</b>。在密码学里常用的是有限域上的点，而不是连续的光滑曲线。点与点之间定义了特定的加法，反复相加写成 <b>Q = kP</b>，称作标量乘法。</p>
+  <div class="lab"><div class="lab-top"><b class="lab-title">图解｜有限域上的真实小曲线：y² = x³ + 2x + 2 (mod 17)</b><span class="tag green">可操作</span></div>
+    <div class="split"><div><svg class="curveplot" id="curvePlot" viewBox="0 0 410 310" role="img" aria-label="有限域椭圆曲线点集合，显示基点 P 和 kP"></svg><p class="mini">每个蓝点都满足模 17 曲线方程；绿色点是基点 P=(5,1)，橙点是当前的 kP。</p></div><div><div class="live-control" style="margin-top:0"><label for="eccSlider">重复点加法 k</label><input type="range" id="eccSlider" min="2" max="18" value="7"/><output id="eccK">7</output></div><div class="slimbox tint"><h4>给定基点 P = (5,1)</h4><div class="number-value" id="eccQ">(0, 6)</div><p><b id="eccK2">7</b>P = Q</p><p>真正的难题：只公开 P 和 Q，怎样反推出 k？</p></div><div class="formula" style="font-size:13px">2P = (6,3)<br/>3P = (10,6)<br/>7P = (0,6)</div><p class="mini">该教学曲线中基点 P 的阶是 19，19P 是无穷远点 O。真实曲线使用远大于此的群。</p></div></div>
+    <div class="diagram-caption">离散点才是正确的有限域图像。不要把 ECC 误解为连续几何曲线上的普通位移，也不要把点乘当作两个坐标相乘。</div>
+  </div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">手算一次｜为什么 2P = (6,3)</b><span class="tag">只需要看懂取余数</span></div>
+    <div class="formula">λ = (3·5² + 2)/(2·1) mod 17 = 13</div>
+    <div class="formula">x₃ = λ² − 2x₁ = 169 − 10 ≡ 6 (mod 17)</div>
+    <div class="formula">y₃ = λ(x₁ − x₃) − y₁ = 13(5 − 6) − 1 ≡ 3 (mod 17)</div>
+    <p class="mini">模运算里的“除以 2”，其实是乘以 2 的模逆元 9（2×9 mod 17 = 1）。这就是有限域运算和日常小数除法的不同。</p>
+  </div>
+  <div class="threat bad"><span class="threat-icon">!</span><div><strong>量子影响：根本性威胁</strong><p>ECC 的安全难题是椭圆曲线离散对数。Shor 算法也能够高效求解，因此 256 位 ECC 并不因为“密钥长度 256 位”就拥有 AES-256 式的抗量子安全性。</p></div></div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>请解释 Q=kP 为什么“正向容易、逆向困难”，并说明 ECC 与 RSA 的困难问题有何不同。</p><textarea class="explain" data-key="ecc" placeholder="我会把它比作……这里点相加是……已知 P、Q 时需要……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="ecc"></span><button class="master-btn" data-key="ecc">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜ECC 能用来加密、签名和交换密钥吗？</summary><p>ECC 是一类数学基础，不是一个独立的万能协议。基于它可以构造 ECDH 密钥协商、ECDSA 数字签名，也有椭圆曲线公钥加密方案。用途不同，安全目标也不同。</p></details>
+</section>
+
+<section class="chapter" id="ecdh" data-key="ecdh">
+  <div class="chapter-header"><div><div class="chapter-mark">04 / KEY AGREEMENT</div><h2>ECDH｜公开交流，怎么得到同一个秘密？</h2><p>两个人从未见过面，通信还可能被旁听。他们怎样在不直接发送秘密密钥的情况下得到相同的共享秘密？</p></div><div class="chapter-icon safe">⇄</div></div>
+  <div class="story"><strong>一句人话：</strong>Alice 私下选数字 a，Bob 私下选数字 b；两人都从公开的点 P 出发。Alice 公开 aP，Bob 公开 bP，然后分别使用自己的私有数字做一次点乘，最终都得到 abP。</div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">交互演示｜改变双方秘密，公开点和共享点会一起变化</b><span class="tag green">真实小曲线运算</span></div>
+    <div class="split"><div class="live-control" style="margin:0"><label for="aliceSlider">Alice 私钥 a</label><input id="aliceSlider" type="range" min="2" max="18" value="5"/><output id="aliceV">5</output></div><div class="live-control" style="margin:0"><label for="bobSlider">Bob 私钥 b</label><input id="bobSlider" type="range" min="2" max="18" value="7"/><output id="bobV">7</output></div></div>
+    <div class="two-people" style="margin:22px 0"><div class="person"><b>👩🏻 Alice</b><small>私有 a（不发送）</small><div class="number-value" id="pubA" style="font-size:24px;margin:9px 0">(9,16)</div><small>公钥 A = aP</small></div><div class="transfer"><span class="arr">⟷</span>只公开交换 A、B<br/><span class="arr">⟷</span></div><div class="person bob"><b>👨🏻 Bob</b><small>私有 b（不发送）</small><div class="number-value" id="pubB" style="font-size:24px;margin:9px 0">(0,6)</div><small>公钥 B = bP</small></div></div>
+    <div class="slimbox tint" style="text-align:center"><span class="mini">双方最终算出的共享点</span><div class="number-value" id="sharedPoint">(10,11)</div><div class="formula" style="margin:10px 0">Alice: a·B = a·(bP) = abP<br/>Bob: b·A = b·(aP) = abP</div><b id="shareMatch">两边结果一致 ✓</b></div>
+    <div class="diagram-caption">实际协议还要把共享点通过 KDF 派生为会话密钥，并认证通信对象。ECDH 本身不能防止中间人分别和双方协商不同的密钥。</div>
+  </div>
+  <div class="threat bad"><span class="threat-icon">!</span><div><strong>量子影响：Shor 可能从公开点恢复秘密标量</strong><p>恢复出 a 或 b 就能重建共享秘密。这也是“先保存流量，未来再解密”（Harvest Now, Decrypt Later）的核心风险之一。</p></div></div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>解释为什么 Alice 算 aB、Bob 算 bA 最终相同，但旁听者只有 P、A、B 却难以算出它们。</p><textarea class="explain" data-key="ecdh" placeholder="两人拥有不一样的私有数字，但……第三方只能看到……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="ecdh"></span><button class="master-btn" data-key="ecdh">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜ECDH 已经保证会话密钥保密，还需要证书吗？</summary><p>需要独立的身份认证。没有认证的 ECDH 易遭中间人攻击：攻击者分别与两端建立密钥，成为两个合法密钥交换的参与者。这与“被动旁听者无法求解”是两件不同的事。</p></details>
+</section>
+
+<section class="chapter" id="ecdsa" data-key="ecdsa">
+  <div class="chapter-header"><div><div class="chapter-mark">05 / DIGITAL SIGNATURES</div><h2>ECDSA｜数字签名不负责保密</h2><p>如果你下载了一份固件，如何判断它确实由芯片厂商发布、而且下载过程中没有被替换？</p></div><div class="chapter-icon">✍</div></div>
+  <div class="story"><strong>一句人话：</strong>只有厂商持有私钥，因此只有厂商能够生成可被相应公钥验证的签名。签名不把固件藏起来，而是让任何持有可信公钥的人检查“这份内容有没有被指定的私钥签过”。</div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">图解｜签名与验签是两条不同的数据路径</b><span class="tag">SoC Secure Boot 场景</span></div>
+    <div class="split"><div class="slimbox"><h4>签名方 · 固件开发商</h4><div class="flowline"><div class="flowstep">Firmware<small>原始固件</small></div><div class="flowarrow">→</div><div class="flowstep">Hash<small>计算摘要</small></div></div><div class="flowline" style="margin-top:8px"><div class="flowstep on">私钥参与签名<small>生成 (r, s)</small></div><div class="flowarrow">→</div><div class="flowstep">固件 + 签名<small>公开发送</small></div></div></div><div class="slimbox"><h4>验证方 · BootROM</h4><div class="flowline"><div class="flowstep">固件 + 签名<small>收到数据</small></div><div class="flowarrow">→</div><div class="flowstep">计算摘要<small>检查内容</small></div></div><div class="flowline" style="margin-top:8px"><div class="flowstep on">可信公钥验签<small>成功才能继续启动</small></div></div></div></div>
+    <p class="mini">算法名 ECDSA 中的 EC 仍然是椭圆曲线。它不是“用私钥把消息加密”，而是一种专门设计的签名数学构造。</p>
+  </div>
+  <h3>甚至可以用刚才那条小曲线，算出一份签名</h3>
+  <div class="lab"><div class="lab-top"><b class="lab-title">手算｜P=(5,1)、群阶 n=19、私钥 d=7、摘要 z=9</b><span class="tag orange">极小教学参数</span></div>
+    <div class="math-steps"><div class="math-step"><span class="caption">临时随机数 k = 3</span><span class="math">R=3P=(10,6)</span></div><div class="math-step"><span class="caption">r = x(R) mod 19</span><span class="math">r = 10</span></div><div class="math-step"><span class="caption">s = k⁻¹(z + rd) mod 19</span><span class="math">s = 1</span></div></div>
+    <div class="formula">签名 (r,s) = (10,1)；公钥 Q = dP = (0,6)</div>
+    <div class="formula">验签：w=s⁻¹=1, u₁=zw=9, u₂=rw=10<br/>u₁P + u₂Q = 9P + 10(7P) = 79P = 3P = (10,6)</div>
+    <p>验签算出的点的 x 坐标模 19 后仍是 <b>10</b>，等于 r，验证通过。真实 ECDSA 还有签名参数合法性检查、摘要处理、抗侧信道实现等要求。</p>
+  </div>
+  <div class="warning"><b>关键安全边界：</b>ECDSA 里的签名随机数 k 是极其敏感的。若重复使用或泄漏 k，可能暴露长期私钥。安全实现通常使用严格受控的随机数产生方式或适用的确定性签名流程。</div>
+  <div class="threat bad"><span class="threat-icon">!</span><div><strong>量子影响：Shor 攻击 ECC 离散对数基础</strong><p>量子攻击者一旦能从公钥恢复签名私钥，就可能伪造合法固件签名。AES 加密固件不自动解决签名身份可信问题。</p></div></div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>假如某个固件完全没有加密，但 ECDSA 验签通过，它到底保护了什么？又没有保护什么？</p><textarea class="explain" data-key="ecdsa" placeholder="验签通过意味着……它不能保证……还需要……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="ecdsa"></span><button class="master-btn" data-key="ecdsa">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜RSA-PSS、ECDSA、ML-DSA 的共同任务是什么？</summary><p>共同任务是数字签名：由私钥生成可公开验证的证明，验证消息内容与签名者密钥的关系。RSA-PSS 使用 RSA 及安全随机化填充，ECDSA 使用椭圆曲线，ML-DSA 使用模格困难问题；它们不是同一套数学运算。</p></details>
+</section>
+
+<section class="chapter" id="sha" data-key="sha">
+  <div class="chapter-header"><div><div class="chapter-mark">06 / CRYPTOGRAPHIC HASHING</div><h2>SHA-256｜不是加密，而是给内容做指纹</h2><p>为什么一个上 GB 的文件，最后能被压缩成固定 256 位的摘要？摘要变了意味着什么？</p></div><div class="chapter-icon safe">#</div></div>
+  <div class="story"><strong>一句人话：</strong>SHA-256 像一台特殊的“压印机”：扔进去一段任意长度的消息，就得到 256 位结果。改变一点点输入，输出通常就会大幅变化；拿着输出不能像解密那样还原原文。</div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">动手看｜输入只变化一个字符，摘要就面目全非</b><span class="tag green">在本地实际计算 SHA-256</span></div>
+    <label for="shaInput" style="display:block;font-weight:750;font-size:13px;margin-bottom:8px">修改消息</label><input class="entry" id="shaInput" type="text" value="abc" maxlength="300" aria-label="SHA-256 输入消息"/>
+    <div class="split" style="margin-top:16px"><div><b class="mini">当前输入的 SHA-256</b><div class="digest" id="shaDigest">ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad</div></div><div><b class="mini">对照：字符串 abd</b><div class="digest alt" id="shaCompare">a52d159f262b2c6ddb724a61840befc36eb30c88877a4030b65cbe86298449c9</div></div></div>
+    <p class="mini" id="shaNote">输入长度：3 字符 / 3 字节 · 输出始终 64 个十六进制字符，即 256 位。</p>
+    <div class="diagram-caption">这里计算的是标准 SHA-256 摘要。它不是“通过 SHA-256 加密一段消息”；哈希没有专门的解密密钥或解密操作。</div>
+  </div>
+  <h3>三件容易被混在一起的事</h3>
+  <div class="linegrid"><div class="slimbox"><h4>原像问题</h4><p>给定摘要 H(m)，找到一条能产生该摘要的消息 m。</p></div><div class="slimbox"><h4>第二原像</h4><p>已知消息 m，再找一条不同消息 m′，却有同样的摘要。</p></div><div class="slimbox"><h4>碰撞</h4><p>自由挑选两条不同消息 m₁、m₂，让它们的摘要一致。</p></div></div>
+  <p>对理想的 256 位哈希，经典原像搜索约需要 2²⁵⁶ 次尝试，经典碰撞搜索受生日界影响约需 2¹²⁸ 次。量子算法会改变这些通用攻击的查询复杂度，但不同攻击目标不能混为一谈。</p>
+  <div class="threat mid"><span class="threat-icon">≈</span><div><strong>量子影响：存在通用量子加速，并非哈希“可逆”</strong><p>Grover 可在理想模型下把原像搜索查询量级降至约 2¹²⁸。对于理想哈希碰撞，也存在不同于 Grover 的量子算法；安全结论需要按具体用途和模型分析。</p></div></div>
+  <div class="warning"><b>工程提醒：</b>单独把“文件 + SHA-256 摘要”发给别人不能防伪，因为攻击者可以同时替换文件和摘要。要认证来源，需要可信签名或带密钥的 MAC。</div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>向一个从未学过密码学的人解释：SHA-256 和 AES 的区别是什么？为什么两个不同文件可能有相同的摘要，却依旧被认为安全？</p><textarea class="explain" data-key="sha" placeholder="SHA-256 不负责……它把任意长度输入……由于输出空间有限，理论上……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="sha"></span><button class="master-btn" data-key="sha">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜有人只给你文件和 SHA-256 摘要，就能证明文件没被攻击者改过吗？</summary><p>不能独立证明。只有当“正确摘要”来自可信渠道时，哈希校验才有意义；否则攻击者能够把恶意文件和它对应的摘要一起交给你。</p></details>
+</section>
+
+<section class="chapter" id="hmac" data-key="hmac">
+  <div class="chapter-header"><div><div class="chapter-mark">07 / MESSAGE AUTHENTICATION</div><h2>HMAC｜给内容指纹加上一把秘密钥匙</h2><p>哈希可以发现内容变化，但谁都能算哈希。怎样让只有知道共享密钥的双方，才能算出正确的认证标签？</p></div><div class="chapter-icon safe">⌘</div></div>
+  <div class="story"><strong>一句人话：</strong>普通 SHA-256 像一台公共指纹机，所有人都可以对任何文件做指纹；HMAC 在计算过程中还混入双方共享的秘密，因此攻击者即使看见消息和标签，也无法随意为修改后的内容生成有效标签。</div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">图解｜普通摘要与 HMAC 的根本区别</b><span class="tag">有秘密 vs 无秘密</span></div>
+    <div class="split"><div class="slimbox"><h4>SHA-256（任何人都可以算）</h4><div class="flowline"><div class="flowstep">公开消息 M</div><div class="flowarrow">→</div><div class="flowstep">SHA-256</div><div class="flowarrow">→</div><div class="flowstep">摘要 H(M)</div></div><p class="mini">改完内容，攻击者可以自己重新算摘要。</p></div><div class="slimbox tint"><h4>HMAC-SHA-256（需要密钥）</h4><div class="flowline"><div class="flowstep">消息 M +<br/>秘密 K</div><div class="flowarrow">→</div><div class="flowstep on">HMAC</div><div class="flowarrow">→</div><div class="flowstep">认证标签</div></div><p class="mini">修改内容但不知道 K，难以产生能通过验证的新标签。</p></div></div>
+    <div class="formula">HMAC(K,M) = H((K ⊕ opad) || H((K ⊕ ipad) || M))</div>
+    <p class="mini">这里的 || 表示拼接，ipad / opad 是定义好的内部/外部填充值，H 通常是 SHA-256。HMAC 并不是简单的 H(K || M)。</p>
+  </div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">真实测试向量｜改变消息，认证标签必须随之变化</b><span class="tag">HMAC-SHA-256</span></div>
+    <div class="slimbox"><span class="mini">秘密 K = <span class="mono">key</span></span><br/><span class="mini">消息 M = <span class="mono">The quick brown fox jumps over the lazy dog</span></span><div class="digest" style="margin-top:12px">f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8</div></div>
+    <p class="mini">接收者用同一密钥重新计算标签，并以适当的恒定时间比较检查是否一致。知道标签本身，不等于知道共享密钥。</p>
+  </div>
+  <div class="threat ok"><span class="threat-icon">✓</span><div><strong>量子影响：与 RSA / ECC 不同</strong><p>HMAC 属于对称密钥认证机制。量子威胁取决于密钥强度、底层哈希和具体安全性质，不存在直接套用 Shor 算法恢复私钥的情形。</p></div></div>
+  <div class="warning">HMAC 的验证者也持有秘密密钥，因此不具备普通数字签名的“任何人只凭公钥就可验证”的性质。两者不能互相替代。</div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>为什么 HTTPS 和 SoC 协议里既需要哈希，也经常需要 HMAC 或 AEAD？HMAC 与数字签名的不同又是什么？</p><textarea class="explain" data-key="hmac" placeholder="哈希本身所有人都能算；HMAC 额外要求……数字签名则允许……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="hmac"></span><button class="master-btn" data-key="hmac">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜为什么不用 HMAC 替代所有公钥签名？</summary><p>因为 HMAC 需要验签双方共享密钥；知道密钥的一方也可以生成标签。软件发行、证书等场景希望验证者只需持有公开的公钥，而不能据此伪造开发商签名，所以需要数字签名。</p></details>
+</section>
+
+<section class="chapter" id="shor" data-key="shor">
+  <div class="chapter-header"><div><div class="chapter-mark">08 / QUANTUM ALGORITHM</div><h2>Shor｜为什么量子计算能威胁 RSA 和 ECC？</h2><p>量子计算不是“所有答案一起算出来、直接读出来”。Shor 的核心是把某些问题转化为寻找周期，再用量子干涉高效提取周期信息。</p></div><div class="chapter-icon warn">ψ</div></div>
+  <div class="story"><strong>一句人话：</strong>如果一个数字规律每隔几步就重复，找到它的周期可能会帮助你分解一个大数。Shor 的量子部分擅长提取这种周期；经典后处理再把周期转化成因数。</div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">手算｜用周期把 15 拆成 3 × 5</b><span class="tag orange">真实数学步骤，极小样例</span></div>
+    <p>定义 f(x) = 2ˣ mod 15。mod 15 就是“求除以 15 的余数”。算一算：</p>
+    <div class="period-grid" id="shorPeriod"><div class="periodcell on"><span>x=0</span><strong>1</strong></div><div class="periodcell on"><span>x=1</span><strong>2</strong></div><div class="periodcell on"><span>x=2</span><strong>4</strong></div><div class="periodcell on"><span>x=3</span><strong>8</strong></div><div class="periodcell repeat"><span>x=4</span><strong>1</strong></div><div class="periodcell"><span>x=5</span><strong>2</strong></div><div class="periodcell"><span>x=6</span><strong>4</strong></div><div class="periodcell"><span>x=7</span><strong>8</strong></div><div class="periodcell"><span>x=8</span><strong>1</strong></div></div>
+    <div class="math-steps" style="margin-top:20px"><div class="math-step"><span class="caption">规律重现</span><span class="math">周期 r = 4</span></div><div class="math-step"><span class="caption">寻找两个公因数</span><span class="math">gcd(2²−1,15) = 3</span></div><div class="math-step"><span class="caption">再找另一个</span><span class="math">gcd(2²+1,15) = 5</span></div></div>
+    <div class="diagram-caption">条件是 r 为偶数，且 2^(r/2) 不与 −1 模 15 同余；满足条件时才能像这个例子一样从 gcd 得到非平凡因子。并不是每次随机选择底数都会成功。</div>
+  </div>
+  <h3>量子部分到底做了什么？</h3>
+  <div class="lab"><div class="flowline"><div class="flowstep">叠加态<small>准备多个计算路径</small></div><div class="flowarrow">→</div><div class="flowstep">模指数运算<small>把周期编码进状态</small></div><div class="flowarrow">→</div><div class="flowstep on">量子傅里叶变换<small>让周期信息干涉增强</small></div><div class="flowarrow">→</div><div class="flowstep">测量与经典处理<small>估计 r，计算 gcd</small></div></div><div class="diagram-caption">测量不会直接输出“所有因数”。它产生与周期有关的信息，还需要利用概率、连分数等经典步骤还原周期，并可能重试。</div></div>
+  <div class="split"><div class="slimbox"><h4>RSA 为什么被打中？</h4><p>大整数分解可归约到相关的周期寻找问题。Shor 可以利用这种数学结构。</p></div><div class="slimbox"><h4>ECC 为什么也被打中？</h4><p>椭圆曲线离散对数属于可用量子算法高效解决的群结构问题，不必先做整数分解。</p></div></div>
+  <div class="threat bad"><span class="threat-icon">!</span><div><strong>关键前提：足够强的容错量子计算机</strong><p>理论上的高效算法不等于今天的量子设备已经实用破解 RSA-2048 或 P-256。逻辑量子位数量、纠错、门深度和运行可靠性都是巨大门槛。</p></div></div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>不能用“量子计算同时把所有密码都试了一遍”来回答。请解释：Shor 具体利用了什么数学规律？为什么 RSA 和 ECC 会受影响？</p><textarea class="explain" data-key="shor" placeholder="关键不是并行穷举，而是……量子干涉帮助我们找到……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="shor"></span><button class="master-btn" data-key="shor">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜能分解 15，为什么不代表能分解 RSA-2048？</summary><p>15 只有 4 位，经典计算也能瞬间分解。RSA-2048 包含 2048 位模数，需要的大规模可靠量子计算、容错编码和量子门数量与玩具例子完全不同。算法的渐近优势不意味着当前硬件成熟。</p></details>
+</section>
+
+<section class="chapter" id="grover" data-key="grover">
+  <div class="chapter-header"><div><div class="chapter-mark">09 / QUANTUM ALGORITHM</div><h2>Grover｜为什么 AES 没有被同样击穿？</h2><p>当攻击者没有 Shor 可以利用的周期结构，只能在海量候选密钥中寻找正确答案时，量子计算还能帮多少忙？</p></div><div class="chapter-icon warn">√N</div></div>
+  <div class="story"><strong>一句人话：</strong>想象有 16 个盒子，只有一个装着目标。普通搜索要逐个试；Grover 使用一个能标记正确答案的量子 oracle 和振幅放大操作，使目标盒子被测量到的概率逐步升高。</div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">交互实验｜16 个候选答案，看看命中概率如何变化</b><span class="tag green">理论振幅模型</span></div>
+    <div class="split" style="align-items:center"><div><div class="searchgrid" id="groverGrid"><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell target">★</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div><div class="searchcell">?</div></div><p class="mini" style="text-align:center">绿色的★代表被 oracle 标记的唯一目标，<br/>不是量子计算提前“看到”了答案。</p></div><div><div class="live-control" style="margin-top:0"><label for="groverStep">Grover 迭代次数</label><input type="range" id="groverStep" min="0" max="3" step="1" value="0"/><output id="groverStepV">0</output></div><span class="mini">测量时得到正确目标的理论概率</span><div class="number-value" id="groverPct">6.25%</div><div class="bar-track" style="margin:11px 0 8px"><div class="bar-fill" id="groverBar" style="width:6.25%"></div></div><p class="mini" id="groverDesc">还没迭代：16 种结果完全均匀，命中率只有 1/16。</p><div class="formula" style="font-size:13px">成功概率 = sin²((2t+1)θ)<br/>sin θ = 1/√16 = 1/4</div></div></div>
+    <div class="diagram-caption">这是恰有 1 个目标的 16 项理想量子搜索。概率并不会一直随迭代次数单调增加，过度迭代还会下降；实际攻击还要实现可逆 oracle 和量子纠错。</div>
+  </div>
+  <h3>为什么影响程度和 Shor 根本不同？</h3>
+  <div class="split"><div class="slimbox"><h4>Shor：利用结构</h4><div class="number-value" style="font-size:25px">结构性加速</div><p>适合因数分解和某些离散对数问题。</p></div><div class="slimbox tint"><h4>Grover：加速通用搜索</h4><div class="number-value" style="font-size:25px">N → √N</div><p>适合黑盒候选搜索的理想查询模型。</p></div></div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">把公式套到密钥搜索</b><span class="tag">量级对比</span></div><table class="grid-table"><thead><tr><th>算法</th><th>经典穷举</th><th>理想 Grover 查询量级</th><th>怎么理解</th></tr></thead><tbody><tr><td>AES-128</td><td>2¹²⁸</td><td>2⁶⁴</td><td>查询量显著减少，但实际代价仍巨大</td></tr><tr><td>AES-256</td><td>2²⁵⁶</td><td>2¹²⁸</td><td>保留很高的通用搜索安全余量</td></tr><tr><td>SHA-256 原像</td><td>2²⁵⁶</td><td>2¹²⁸</td><td>指的是原像查找，不是解密消息</td></tr></tbody></table><p class="mini">平方根关系说的是 oracle 查询次数，不等于量子门总数、墙钟时间或现实可用攻击成本。</p></div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>为什么“量子计算能破解 RSA”不能直接推导成“量子计算能轻松破解 AES-256”？请用 Shor 与 Grover 的根本区别回答。</p><textarea class="explain" data-key="grover" placeholder="RSA 的难题具有……而 AES 的密钥搜索……Grover 提供的是……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="grover"></span><button class="master-btn" data-key="grover">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜为什么有量子叠加，却不能一次把 2²⁵⁶ 个密钥全读出来？</summary><p>测量只产生一个结果，无法读出叠加态里的全部分支。Grover 使用干涉把正确答案的振幅逐次放大，再测量提高命中概率；不是直接读取所有计算路径。</p></details>
+</section>
+
+<section class="chapter" id="mlkem" data-key="mlkem">
+  <div class="chapter-header"><div><div class="chapter-mark">10 / POST-QUANTUM · KEM</div><h2>ML-KEM｜换一道量子计算还不擅长的难题</h2><p>RSA 和 ECDH 都依赖 Shor 可以高效攻击的数学结构，那能否用另一类数学问题建立共享密钥？</p></div><div class="chapter-icon pqc">▤</div></div>
+  <div class="story"><strong>一句人话：</strong>攻击者面对的不再是“给我一个大乘积、让我找回因数”，而是“给我很多被小误差扰动的高维数学关系、让我恢复其中藏着的秘密”。这就是格密码中 Learning With Errors 思路的核心直觉。</div>
+  <h3>为什么“一点点噪声”能改变求解难度？</h3>
+  <div class="lab"><div class="lab-top"><b class="lab-title">手算｜有误差的线性方程</b><span class="tag green">可切换</span></div>
+    <div class="formula">b = As + e (mod 17)</div>
+    <div class="split"><div class="slimbox"><h4>公开矩阵 A</h4><div class="formula" style="margin:5px 0">A = [ 2 &nbsp;5 ]<br/>&nbsp;&nbsp;&nbsp;&nbsp;[ 7 &nbsp;3 ]</div><p class="mini">示例中秘密向量 s = (3,2)，攻击者不知道它。</p></div><div class="slimbox tint"><h4>误差向量 e</h4><div class="number-value" style="font-size:27px" id="noiseValue">(1, -1)</div><button class="btn secondary tiny" id="toggleNoise" style="margin-top:7px">切换：暂时去掉误差</button></div></div>
+    <div class="math-steps"><div class="math-step"><span class="caption">A·s 原始乘积</span><span class="math">(16, 27)</span></div><div class="math-step"><span class="caption">加误差并取余</span><span class="math" id="lweB">b = (0,9)</span></div><div class="math-step"><span class="caption">错误地假设 e=0 时求得</span><span class="math" id="lweGuess">s′ = (8,7)</span></div></div>
+    <p id="lweExplain">攻击者知道 A 和 b，却不知道 e。如果错误地假设没有误差，按精确方程反推出的 (8,7) 与真正的 (3,2) 完全不同。</p>
+    <div class="diagram-caption">真实 ML-KEM 基于 Module-LWE，涉及高维多项式、具体参数、密钥封装与验证机制；这个 2×2 方程只解释“误差让逆推困难”的来源，完全不具备实际安全性。</div>
+  </div>
+  <h3>ML-KEM 实际上是怎样给双方建立秘密的？</h3>
+  <div class="lab"><div class="two-people"><div class="person"><b>Bob · 接收方</b><small>生成公钥 pk 和私钥 sk</small><div style="font-size:14px;font-weight:800;margin-top:16px;color:#0e8070">发布 pk</div><small>私钥 sk 留在本地</small></div><div class="transfer"><span class="arr">→</span>公开的 pk<br/><br/><span class="arr">←</span>密文 ct</div><div class="person bob"><b>Alice · 发起方</b><small>使用 Bob 公钥 pk</small><div style="font-size:14px;font-weight:800;margin-top:16px;color:#7453a9">Encaps(pk)</div><small>得到 ct 和共享秘密 K</small></div></div>
+    <div class="slimbox tint" style="text-align:center;margin-top:17px"><b>Bob 使用 Decaps(sk, ct) → 得到同一个 K</b><p class="mini">随后双方使用 KDF 派生应用密钥，再通过 AES-GCM 等机制保护大量数据。</p></div>
+    <p class="mini">KEM（密钥封装）与 ECDH（密钥协商）的交互方式不同：ML-KEM 一方生成密钥对，另一方用公钥封装共享秘密；它不是“对原始文件进行 ML-KEM 加密”。</p>
+  </div>
+  <div class="threat ok"><span class="threat-icon">✓</span><div><strong>抗量子性：基于目前没有已知高效量子算法的困难问题</strong><p>NIST FIPS 203（2024）标准化了 ML-KEM-512、ML-KEM-768 和 ML-KEM-1024。它们是不同安全参数集，不是“密钥一定只有 512 / 768 / 1024 位”。</p></div></div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>解释：格密码为何“允许合法方恢复秘密，却让攻击者面对难以恢复的扰动关系”？ML-KEM 到底建立了什么，而不是加密了什么？</p><textarea class="explain" data-key="mlkem" placeholder="它改变了数学问题……公开关系里包含……真正产生的是共享密钥……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="mlkem"></span><button class="master-btn" data-key="mlkem">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜ML-KEM 已经替换 ECDH，是不是证书认证也自然抗量子了？</summary><p>不是。ML-KEM 解决共享密钥建立问题；证书里的传统 ECDSA 或 RSA 签名如果不迁移，身份认证仍可能受量子攻击。协议要同时考虑密钥建立与认证。</p></details>
+</section>
+
+<section class="chapter" id="mldsa" data-key="mldsa">
+  <div class="chapter-header"><div><div class="chapter-mark">11 / POST-QUANTUM · DIGITAL SIGNATURE</div><h2>ML-DSA｜后量子时代的“电子公章”</h2><p>密钥协商升级后，软件签名、固件验签、证书颁发还需要一套能在未来量子威胁下继续使用的数字签名。</p></div><div class="chapter-icon pqc">✦</div></div>
+  <div class="story"><strong>一句人话：</strong>ML-DSA 与 ECDSA 做的是同一份工作：私钥持有者为消息签名，其他人用公开的公钥验签。不同之处是它背后使用模格问题，而不是椭圆曲线离散对数。</div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">图解｜签名不是把原文加密</b><span class="tag">ML-DSA 数据流</span></div>
+    <div class="split"><div class="slimbox"><h4>生产者：生成签名</h4><div class="flowline"><div class="flowstep">固件 M<small>需要签的内容</small></div><div class="flowarrow">↓</div><div class="flowstep on">Sign(sk,M)<small>私钥和安全采样</small></div></div><div class="formula" style="font-size:13px">σ = Sign(sk, M)</div><p class="mini">真实 ML-DSA 会构造与公钥数学关系相关的承诺、挑战和响应，不能只写成“哈希后私钥加密”。</p></div><div class="slimbox tint"><h4>验证者：公开验签</h4><div class="flowline"><div class="flowstep">固件 M<br/>签名 σ</div><div class="flowarrow">↓</div><div class="flowstep on">Verify(pk,M,σ)<small>不需要私钥</small></div></div><div class="formula" style="font-size:13px">有效 → accept<br/>不匹配 → reject</div><p class="mini">如果固件内容发生变化，原先的签名通常无法再通过验证。</p></div></div>
+  </div>
+  <h3>为什么不能直接用 ML-KEM 生成签名？</h3>
+  <p>两者虽然都属于模格密码，但提供的安全功能不同。ML-KEM 是 <b>Key Encapsulation Mechanism</b>，旨在让双方获得共享秘密；ML-DSA 是 <b>Digital Signature Algorithm</b>，旨在生成可公开验证的签名。数学构造、输出和安全定义均不同。</p>
+  <div class="lab"><div class="lab-top"><b class="lab-title">参数名称很像，含义却不同</b><span class="tag">FIPS 204</span></div><table class="grid-table"><thead><tr><th>参数集</th><th>用途</th><th>设计取舍</th></tr></thead><tbody><tr><td>ML-DSA-44</td><td>数字签名</td><td>相对较小的密钥和签名</td></tr><tr><td>ML-DSA-65</td><td>数字签名</td><td>较高安全强度</td></tr><tr><td>ML-DSA-87</td><td>数字签名</td><td>更高安全强度，尺寸/运算开销随之增加</td></tr></tbody></table><p class="mini">44 / 65 / 87 是参数集命名，不是“44 位、65 位、87 位的签名”。</p></div>
+  <div class="threat ok"><span class="threat-icon">✓</span><div><strong>抗量子性：用新的困难问题建立签名安全基础</strong><p>NIST FIPS 204（2024）已正式标准化 ML-DSA。仍需考虑实现的随机性、旁路泄漏、故障注入、签名大小和长期密钥保护。</p></div></div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>有人说“我们已经把 ECDH 换成 ML-KEM，所以固件签名也安全了”。请找出这个说法的漏洞。</p><textarea class="explain" data-key="mldsa" placeholder="ML-KEM 只负责……而固件签名还依赖……两条安全链……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="mldsa"></span><button class="master-btn" data-key="mldsa">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜ML-DSA 的签名为什么可以被公开验证？</summary><p>签名设计提供与私钥持有者相关的公开可验证数学关系；验证者只需要可信公钥、消息和签名，就可以检查对应关系。签名不应泄露用于伪造后续签名的秘密。</p></details>
+</section>
+
+<section class="chapter" id="slhdsa" data-key="slhdsa">
+  <div class="chapter-header"><div><div class="chapter-mark">12 / POST-QUANTUM · HASH-BASED SIGNATURE</div><h2>SLH-DSA｜让哈希树承担签名的信任链</h2><p>除了模格密码，还能不能构造抗量子数字签名？答案是可以借助哈希函数与树形认证结构，但要付出不同的签名尺寸和速度代价。</p></div><div class="chapter-icon pqc">♧</div></div>
+  <div class="story"><strong>一句人话：</strong>想象你有一棵由哈希值构成的树。根值事先被信任；签名提供必要的分支信息，验证者便能沿着树向上重建根，证明某个一次性签名公钥被包含在可信结构里。</div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">图解｜点击叶子，看看验证时需要哪些旁支哈希</b><span class="tag green">Merkle 树直觉模型</span></div>
+    <div class="merkle-stage"><svg viewBox="0 0 680 260" id="merkleSvg" role="img" aria-label="四叶 Merkle 哈希树，选中叶子及认证路径动态高亮"></svg></div>
+    <div class="flowline" style="margin-top:15px"><button class="btn tiny secondary leaf-btn" data-leaf="0">验证叶子 L0</button><button class="btn tiny secondary leaf-btn" data-leaf="1">验证叶子 L1</button><button class="btn tiny secondary leaf-btn" data-leaf="2">验证叶子 L2</button><button class="btn tiny secondary leaf-btn" data-leaf="3">验证叶子 L3</button></div>
+    <p class="mini" id="merkleText">验证 L1 时，需要它的同层兄弟 L0 的哈希，以及上一层另一分支的哈希。沿途逐层合并，直到与可信根比较。</p>
+    <div class="diagram-caption">这是四叶 Merkle 树的教学模型。真正的 SLH-DSA 使用更复杂的无状态哈希签名体系，包括 WOTS+、FORS、多层树等，不是简单“把文件 SHA-256 几次”。</div>
+  </div>
+  <div class="split"><div class="slimbox"><h4>优点</h4><p>安全假设建立在适当的哈希函数性质上，与格密码路线具有不同的数学依赖。</p></div><div class="slimbox"><h4>代价</h4><p>通常需要较大的签名和更多哈希计算，工程中要权衡带宽、存储空间与验签性能。</p></div></div>
+  <div class="threat ok"><span class="threat-icon">✓</span><div><strong>抗量子性：哈希签名路线</strong><p>NIST FIPS 205（2024）标准化 SLH-DSA，基于 SPHINCS+。它是无状态方案，不要求签名设备像传统状态型一次性签名体系那样安全保存已用过的叶子索引。</p></div></div>
+  <div class="feynman"><h4>🗣 费曼复述</h4><p>向同事解释：Merkle 树为什么只用少量“兄弟哈希”就能证明某个叶子属于可信根？以及它为什么不等于一个完整数字签名算法？</p><textarea class="explain" data-key="slhdsa" placeholder="每个父节点由孩子的哈希构成……只要提供……但真正签名还需要……"></textarea><div class="feynman-bottom"><span class="saved" data-saved="slhdsa"></span><button class="master-btn" data-key="slhdsa">我能讲清楚 ✓</button></div></div>
+  <details class="think"><summary>检查理解｜为什么 SLH-DSA 和 ML-DSA 可以同时被标准化？</summary><p>它们提供同一种数字签名功能，却基于不同的数学与工程权衡。不同路线有利于多样化安全假设与部署选择；不是一种算法“万能”，另一种必然多余。</p></details>
+</section>
+
+<section class="chapter" id="migration">
+  <div class="chapter-header"><div><div class="chapter-mark">13 / BRING IT ALL TOGETHER</div><h2>从 HTTPS 到 Secure Boot，真正需要迁移的是哪一段？</h2><p>理解算法之后，最重要的是回到一个完整系统，判断每条安全链里到底是谁在加密、谁在验签、谁在建立密钥。</p></div><div class="chapter-icon safe">⌁</div></div>
+  <h3>HTTPS：并不是把 AES 全部换成格密码</h3>
+  <div class="lab"><div class="lab-top"><b class="lab-title">TLS 1.3 混合密钥建立：传统 + 抗量子</b><span class="tag green">RFC 10024 · 2026</span></div><div class="split"><div class="slimbox"><h4>过去：传统密钥交换</h4><div class="flowstep">ECDHE → 共享秘密</div><div class="flowstep on" style="margin-top:8px">KDF → AES-GCM</div><p class="mini">未来若 ECDHE 受到 Shor 攻击，历史通信可能面临风险。</p></div><div class="slimbox tint"><h4>现在：混合密钥建立</h4><div class="flowline"><div class="flowstep">X25519</div><div class="flowstep">ML-KEM-768</div></div><div class="flowstep on" style="margin-top:8px">组合秘密 → KDF → AES-GCM</div><p class="mini">例如 X25519MLKEM768；在适用安全条件下，结合两条不同的密钥建立机制。</p></div></div>
+    <div class="warning">身份认证是另一条线：证书若依旧使用 RSA / ECDSA，需要独立评估签名迁移。不要因为密钥交换换成 ML-KEM，就以为整个 HTTPS 身份链已经自动抗量子。</div>
+  </div>
+  <h3>SoC：加密引擎安全 ≠ 启动信任根安全</h3>
+  <table class="grid-table"><thead><tr><th>SoC 模块</th><th>当前承担的工作</th><th>量子时代需要审查的点</th></tr></thead><tbody>
+    <tr><td>AES / SM4 Engine</td><td>数据与存储加密</td><td>密钥强度、模式、nonce 与抗侧信道实现；通常无需整体替换</td></tr>
+    <tr><td>SHA-256 Engine</td><td>固件摘要、完整性处理</td><td>哈希安全参数、签名方案兼容性</td></tr>
+    <tr><td>ECDSA Verify</td><td>ROM 固件验签</td><td>未来是否支持 ML-DSA / SLH-DSA 等新签名</td></tr>
+    <tr><td>BootROM + OTP</td><td>固化公钥/信任锚与启动流程</td><td>ROM 不可修改时的迁移策略、密钥尺寸、反回滚</td></tr>
+    <tr><td>TRNG / DRBG</td><td>提供密钥生成随机性</td><td>熵源、健康测试、故障注入和密钥泄漏问题仍然重要</td></tr>
+  </tbody></table>
+  <div class="story"><strong>一个 SoC 工程师应该问的关键问题：</strong>如果我的 AES-256 一直安全，但是 BootROM 只支持用 ECDSA 验固件签名，那么在长期量子威胁下，谁能够为“未经授权的固件”伪造签名？我的信任根还有没有算法升级路径？</div>
+  <h3>标准化时间线</h3>
+  <div class="timeline"><div><span class="time">2024 / AUG</span><strong>NIST FIPS 203 / 204 / 205</strong><p>ML-KEM、ML-DSA、SLH-DSA 正式标准化</p></div><div><span class="time">2026 / AUG</span><strong>IETF RFC 10024</strong><p>TLS 1.3 定义 X25519MLKEM768 等混合机制</p></div><div><span class="time">2026 / OCT 27</span><strong>NIST IR 8547 Final</strong><p>发布后量子密码标准迁移的正式路线图</p></div></div>
+  <div class="warning">PQC（后量子密码）与 QKD（量子密钥分发）不是同一技术。PQC 可以跑在传统 CPU 或专用芯片上；QKD 需要特定量子通信条件，不能替代普通终端的认证与安全软件。</div>
+</section>
+
+<section class="chapter questions" id="final">
+  <div class="chapter-header"><div><div class="chapter-mark">14 / FEYNMAN CHECKPOINT</div><h2>合上书，试着把这些知识讲给别人</h2><p>下面不是考你记不记得名词，而是考你能不能正确区分安全目标与数学假设。每题先选，再看解释。</p></div><div class="chapter-icon safe">✓</div></div>
+  <div class="question" data-correct="b"><p>01. 把一份文件的 SHA-256 摘要一起发送，能直接证明它没被攻击者替换吗？</p><div class="choices"><button class="choice" data-answer="a">A. 能，因为 SHA-256 不可逆</button><button class="choice" data-answer="b">B. 不能，攻击者也可以替换文件和摘要</button></div><div class="quiz-result" data-explain="哈希本身不证明真实性。要确保摘要可信，需要可信渠道、数字签名或 MAC。"></div></div>
+  <div class="question" data-correct="a"><p>02. 一台设备只支持 ECDSA 固件验签，AES-256 保密非常强。这台设备的启动认证是否也自动抗量子？</p><div class="choices"><button class="choice" data-answer="a">A. 不是，签名信任链仍依赖 ECC</button><button class="choice" data-answer="b">B. 是，因为 AES-256 已经足够强</button></div><div class="quiz-result" data-explain="保密与真实性是独立功能。攻击 ECDSA 签名的量子威胁，不会因为固件又经过 AES 加密就消失。"></div></div>
+  <div class="question" data-correct="b"><p>03. Shor 和 Grover 对密码体系的冲击为什么不一样？</p><div class="choices"><button class="choice" data-answer="a">A. Shor 比 Grover 的量子芯片更高级</button><button class="choice" data-answer="b">B. Shor 利用特殊数学结构；Grover 加速通用搜索</button></div><div class="quiz-result" data-explain="Shor 针对因数分解和离散对数等结构问题，Grover 则是平方根量级的搜索加速。在各自适用问题下，算法优势类型不同。"></div></div>
+  <div class="question" data-correct="a"><p>04. 部署 ML-KEM 以后，是否可以不用做证书验证？</p><div class="choices"><button class="choice" data-answer="a">A. 不行，ML-KEM 建密钥不等于验证身份</button><button class="choice" data-answer="b">B. 可以，ML-KEM 自带网站身份认证</button></div><div class="quiz-result" data-explain="密钥建立回答‘双方如何得到相同秘密’，身份认证回答‘对面究竟是谁’。两者要同时正确。"></div></div>
+  <div class="question" data-correct="b"><p>05. 为什么 HMAC 不能直接替代 ECDSA 作为公开软件发行签名？</p><div class="choices"><button class="choice" data-answer="a">A. HMAC 输出太短，不能验证文件</button><button class="choice" data-answer="b">B. HMAC 验证者也需要共享秘密，不具公开可验证签名性质</button></div><div class="quiz-result" data-explain="数字签名公开公钥仍能验签，验证者无需拥有伪造签名的秘密；HMAC 验证依赖共享密钥。"></div></div>
+  <div class="question" data-correct="a"><p>06. 为什么 ML-KEM 和 ML-DSA 虽然都使用模格密码，却不是同一个算法？</p><div class="choices"><button class="choice" data-answer="a">A. 一个建立共享秘密，一个生成公开可验证签名</button><button class="choice" data-answer="b">B. 一个是经典加密，另一个要用量子电脑</button></div><div class="quiz-result" data-explain="PQC 可以在传统计算机运行。ML-KEM 解决密钥封装；ML-DSA 解决数字签名，安全目标和构造不同。"></div></div>
+  <div class="completion"><strong id="quizScore">答题情况：尚未开始</strong><p>推荐用最简单的三句话自测每个算法：①它保护什么？②为什么合法方容易、攻击者困难？③量子计算改变了哪一项困难性？</p></div>
+  <div class="lab"><div class="lab-top"><b class="lab-title">最终挑战｜你能不用看笔记，向别人讲完这一段吗？</b><span class="tag green">费曼终测</span></div><p>“一份银行交易先怎样验证服务器身份，再怎样建立共享密钥，最后怎样用 AES 加密？为什么攻击者即使知道所有算法也不应得到密钥？未来量子攻击者能冲击哪条链、不能轻易冲击哪条链？新系统需要怎样升级？”</p><textarea class="entry explain" data-key="finalNarrative" rows="6" style="min-height:135px;resize:vertical" placeholder="不要复制答案；试着用自己的话讲一个完整故事……"></textarea><p class="mini">你可以点击左侧「导出我的学习笔记」，保存全部个人解释、已掌握章节和答题结果。该页面不会把输入传到服务器；如浏览器禁用本地存储，复述仅在当前页面内保留。</p></div>
+</section>
+
+<footer class="sources" id="references">
+  <div class="overline">15 / SOURCES & FURTHER READING</div><h2 class="section-title">参考标准与专业资料</h2>
+  <p class="lead">正文优先遵循正式标准与专业机构原始文献。实验里的小参数是准确的教学算例，但并不等同于工业算法的真实安全性或实现方法。</p>
+  <ol>
+    <li><a href="https://csrc.nist.gov/pubs/fips/197/final" target="_blank" rel="noopener">NIST FIPS 197 — Advanced Encryption Standard</a>：AES 的分组大小、轮变换与密钥长度。</li>
+    <li><a href="https://csrc.nist.gov/pubs/fips/180-4/upd1/final" target="_blank" rel="noopener">NIST FIPS 180-4 — Secure Hash Standard</a>：SHA-256。</li>
+    <li><a href="https://csrc.nist.gov/pubs/fips/186-5/final" target="_blank" rel="noopener">NIST FIPS 186-5 — Digital Signature Standard</a>：ECDSA、RSA 数字签名。</li>
+    <li><a href="https://www.rfc-editor.org/rfc/rfc8017" target="_blank" rel="noopener">RFC 8017 — PKCS #1: RSA Cryptography Specifications</a>：RSA-OAEP、RSA-PSS。</li>
+    <li><a href="https://www.rfc-editor.org/rfc/rfc2104" target="_blank" rel="noopener">RFC 2104 — HMAC</a>：带密钥的哈希认证。</li>
+    <li><a href="https://www.rfc-editor.org/rfc/rfc8446" target="_blank" rel="noopener">RFC 8446 — TLS 1.3</a>：密钥交换、身份认证与 AEAD 的配合。</li>
+    <li><a href="https://csrc.nist.gov/pubs/fips/203/final" target="_blank" rel="noopener">NIST FIPS 203 — ML-KEM</a>：模格密钥封装标准，2024。</li>
+    <li><a href="https://csrc.nist.gov/pubs/fips/204/final" target="_blank" rel="noopener">NIST FIPS 204 — ML-DSA</a>：模格数字签名标准，2024。</li>
+    <li><a href="https://csrc.nist.gov/pubs/fips/205/final" target="_blank" rel="noopener">NIST FIPS 205 — SLH-DSA</a>：无状态哈希签名标准，2024。</li>
+    <li><a href="https://csrc.nist.gov/pubs/sp/800/227/final" target="_blank" rel="noopener">NIST SP 800-227 — Recommendations for KEMs</a>：密钥封装机制应用与安全建议，2025。</li>
+    <li><a href="https://datatracker.ietf.org/doc/html/rfc10024" target="_blank" rel="noopener">IETF RFC 10024 — PQ/T Hybrid Key Agreement for TLS 1.3</a>：X25519MLKEM768 等混合机制，2026。</li>
+    <li><a href="https://csrc.nist.gov/pubs/ir/8547/final" target="_blank" rel="noopener">NIST IR 8547 — Transition to Post-Quantum Cryptography Standards</a>：后量子密码迁移指南，2026 年 10 月 27 日。</li>
+  </ol>
+  <div class="story"><strong>这份教材的边界：</strong>所有 RSA / ECC / ECDSA / LWE 小数字皆为教学演示。不要自行实现密码库用于生产，不要把本页面的计算过程当作安全协议。真正的安全取决于标准算法、安全参数、随机数、密钥管理、协议认证与侧信道防护共同成立。</div>
+  <p class="source-date">最后核对：2026-10-30 · 原创交互示意图 · 可离线使用 · 个人解释优先保存在当前浏览器的 localStorage</p>
+</footer>
+</div></div>
+<script>
+'use strict';
+(function(){
+ const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+ const fallbackStorage=Object.create(null);
+ const get=(k)=>{try{return localStorage.getItem('cryptolab_v1_'+k) ?? (fallbackStorage[k]??null)}catch(e){return fallbackStorage[k]??null}};
+ const set=(k,v)=>{fallbackStorage[k]=v;try{localStorage.setItem('cryptolab_v1_'+k,v)}catch(e){}};
+ const algos=['aes','rsa','ecc','ecdh','ecdsa','sha','hmac','shor','grover','mlkem','mldsa','slhdsa'];
+ const safe=(n,m)=>((n%m)+m)%m;
+ function masteryProgress(){
+   const n=algos.filter(k=>get('master_'+k)==='1').length;
+   $('#progressFraction').textContent=n+' / '+algos.length;
+   $('#mobileProgress').textContent=n+' / '+algos.length;
+   $('#masteryBar').style.width=(100*n/algos.length)+'%';
+   $$('.master-btn').forEach(el=>{const done=get('master_'+el.dataset.key)==='1';el.classList.toggle('mastered',done);el.textContent=done?'已掌握 ✓（点击撤销）':'我能讲清楚 ✓'});
+ }
+ $$('.master-btn').forEach(btn=>btn.addEventListener('click',()=>{const k=btn.dataset.key;set('master_'+k,get('master_'+k)==='1'?'0':'1');masteryProgress()}));
+ $$('.explain').forEach(ta=>{
+   const key='note_'+ta.dataset.key;const value=get(key);if(value!==null)ta.value=value;
+   const badge=document.querySelector('[data-saved="'+ta.dataset.key+'"]');
+   if(badge && value)badge.textContent='上次的解释已恢复 · 自动保存';
+   ta.addEventListener('input',()=>{set(key,ta.value);if(badge)badge.textContent='✓ 已保存在本地浏览器'});
+ });
+ masteryProgress();
+ const navLinks=$$('.nav a');
+ const watchSections=$$('section[id],footer[id]');
+ let linkTimer;
+ function updateReading(){
+   const d=document.documentElement;
+   const denom=Math.max(1,d.scrollHeight-innerHeight);
+   $('#readingProgress').style.width=(100*scrollY/denom).toFixed(1)+'%';
+   let id='map';const threshold=window.innerHeight*.22+((window.innerWidth<870)?58:0);
+   for(const s of watchSections){if(s.getBoundingClientRect().top<=threshold)id=s.id}
+   navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));
+ }
+ window.addEventListener('scroll',()=>{if(linkTimer)return;linkTimer=requestAnimationFrame(()=>{linkTimer=null;updateReading()})},{passive:true});
+ window.addEventListener('resize',updateReading);
+ updateReading();
+ $('#menuToggle').addEventListener('click',()=>{let open=$('#sidebar').classList.toggle('show');$('#menuToggle').setAttribute('aria-expanded',String(open))});
+ navLinks.forEach(a=>a.addEventListener('click',()=>{$('#sidebar').classList.remove('show');$('#menuToggle').setAttribute('aria-expanded','false')}));
+ // AES: row-wise cyclic shifts on a 4-by-4 illustrative state.
+ const base=Array.from({length:16},(_,i)=>i);
+ const shifted=[0,1,2,3,5,6,7,4,10,11,8,9,15,12,13,14];
+ let shiftedOn=false;
+ function renderMatrix(){const nums=shiftedOn?shifted:base;$('#aesMatrix').innerHTML=nums.map((v,i)=>`<span class="${shiftedOn&&v!==i?'hot':''}">${v.toString(16).toUpperCase()}</span>`).join('');$('#shiftToggle').textContent=shiftedOn?'复原原始矩阵 ↺':'点击：执行 ShiftRows →'}
+ $('#shiftToggle').addEventListener('click',()=>{shiftedOn=!shiftedOn;renderMatrix()});renderMatrix();
+ const inputXor=$('#xorInput');
+ function updateXor(){const txt=inputXor.value.trim();const status=$('#xorStatus');if(!/^[01]{8}$/.test(txt)){status.textContent='请输入刚好 8 位 0 / 1';status.style.color='#c04d44';return}status.textContent='规则：相同为 0，不同为 1';status.style.color='';$('#xorK').textContent=txt;$('#xorOut').textContent=Array.from(txt,(ch,i)=>Number(ch) ^ Number('10101010'[i])).join('')}
+ inputXor.addEventListener('input',updateXor);updateXor();
+ // RSA textbook example; not secure encryption.
+ function powmod(a,e,m){let x=1;for(a%=m;e>0;e=Math.floor(e/2)){if(e%2)x=(x*a)%m;a=(a*a)%m;}return x}
+ function updateRSA(){const m=Number($('#rsaSlider').value),c=powmod(m,3,55),back=powmod(c,27,55);$('#rsaPlain').textContent=m;$('#rsaM').textContent=m;$('#rsaC').textContent=c;$('#rsaBack').textContent=back}
+ $('#rsaSlider').addEventListener('input',updateRSA);updateRSA();
+ // All ECC arithmetic is over F_17 for y²=x³+2x+2, base point (5,1), order 19.
+ const ECp=17,G=[5,1];
+ const inv=(x,p)=>{const a=safe(x,p);for(let j=1;j<p;j++)if(a*j%p===1)return j;throw Error('not invertible')};
+ function pointAdd(P,Q){if(P===null)return Q;if(Q===null)return P;const [x1,y1]=P,[x2,y2]=Q;
+   if(x1===x2 && safe(y1+y2,ECp)===0)return null;
+   let lambda;
+   if(x1===x2 && y1===y2){lambda=safe((3*x1*x1+2)*inv(2*y1,ECp),ECp)}
+   else lambda=safe((y2-y1)*inv(x2-x1,ECp),ECp);
+   const x3=safe(lambda*lambda-x1-x2,ECp),y3=safe(lambda*(x1-x3)-y1,ECp);
+   return [x3,y3];
+ }
+ function pointMul(k,P){let A=P,R=null;while(k>0){if(k%2)R=pointAdd(R,A);A=pointAdd(A,A);k=Math.floor(k/2)}return R}
+ const pt=p=>p===null?'O':`(${p[0]}, ${p[1]})`;
+ const ns='http://www.w3.org/2000/svg';
+ const svgEl=(tag,attr={})=>{const e=document.createElementNS(ns,tag);Object.entries(attr).forEach(([k,v])=>e.setAttribute(k,String(v)));return e};
+ function renderCurve(){
+  const svg=$('#curvePlot'),k=Number($('#eccSlider').value),Q=pointMul(k,G);
+  $('#eccK').textContent=k;$('#eccK2').textContent=k;$('#eccQ').textContent=pt(Q);
+  svg.replaceChildren();const x0=50,y0=270,sx=19.2,sy=14.6;
+  const xpix=x=>x0+sx*x,ypix=y=>y0-sy*y;
+  for(let v=0;v<=16;v+=4){svg.appendChild(svgEl('line',{x1:xpix(v),y1:ypix(0),x2:xpix(v),y2:ypix(16),stroke:'#e0eaf0','stroke-width':1}));svg.appendChild(svgEl('line',{x1:xpix(0),y1:ypix(v),x2:xpix(16),y2:ypix(v),stroke:'#e0eaf0','stroke-width':1}));const a=svgEl('text',{x:xpix(v)-5,y:ypix(0)+15});a.textContent=v;svg.appendChild(a);const b=svgEl('text',{x:27,y:ypix(v)+4});b.textContent=v;svg.appendChild(b)}
+  for(let x=0;x<ECp;x++)for(let y=0;y<ECp;y++)if(safe(y*y-x*x*x-2*x-2,ECp)===0){const selected=x===Q[0]&&y===Q[1],isbase=x===G[0]&&y===G[1];const c=svgEl('circle',{cx:xpix(x),cy:ypix(y),r:selected?8:isbase?7:4.5,fill:selected?'#df9b49':isbase?'#17a482':'#82afc3',stroke:selected?'#ae6c18':isbase?'#0f725f':'#ffffff','stroke-width':selected||isbase?2:1});const title=svgEl('title');title.textContent=`(${x},${y})${selected?' = kP':isbase?' = P':''}`;c.appendChild(title);svg.appendChild(c)}
+  if(Q){const label=svgEl('text',{x:xpix(Q[0])+10,y:ypix(Q[1])-10,fill:'#8b551c','font-weight':'bold'});label.textContent=`${k}P`;svg.appendChild(label)}
+  const baseLabel=svgEl('text',{x:xpix(G[0])+10,y:ypix(G[1])+10,fill:'#087866','font-weight':'bold'});baseLabel.textContent='P';svg.appendChild(baseLabel);
+ }
+ $('#eccSlider').addEventListener('input',renderCurve);renderCurve();
+ function updateECDH(){const a=Number($('#aliceSlider').value),b=Number($('#bobSlider').value),A=pointMul(a,G),B=pointMul(b,G),one=pointMul(a,B),two=pointMul(b,A);
+   $('#aliceV').textContent=a;$('#bobV').textContent=b;$('#pubA').textContent=pt(A);$('#pubB').textContent=pt(B);$('#sharedPoint').textContent=pt(one);$('#shareMatch').textContent=pt(one)===pt(two)?'两边结果一致 ✓':'两边结果不同';
+ }
+ $('#aliceSlider').addEventListener('input',updateECDH);$('#bobSlider').addEventListener('input',updateECDH);updateECDH();
+ // Offline, pure Javascript SHA-256 for UTF-8 text, to avoid external crypto dependencies.
+ const SHA_K=[
+  0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+  0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+  0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+  0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+  0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+  0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+  0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+  0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+ const right=(x,n)=>(x>>>n)|(x<<(32-n));
+ function sha256(txt){
+  const data=new TextEncoder().encode(txt),len=data.length,padded=Math.ceil((len+9)/64)*64;
+  const bytes=new Uint8Array(padded);bytes.set(data);bytes[len]=0x80;
+  const bits=BigInt(len)*8n;for(let i=0;i<8;i++)bytes[padded-1-i]=Number((bits>>BigInt(i*8))&0xffn);
+  const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  for(let at=0;at<padded;at+=64){const W=new Uint32Array(64);
+    for(let i=0;i<16;i++){let j=at+i*4;W[i]=(((bytes[j]<<24)|(bytes[j+1]<<16)|(bytes[j+2]<<8)|bytes[j+3])>>>0)}
+    for(let i=16;i<64;i++){const a=W[i-15],b=W[i-2];let s0=right(a,7)^right(a,18)^(a>>>3),s1=right(b,17)^right(b,19)^(b>>>10);W[i]=(W[i-16]+s0+W[i-7]+s1)>>>0}
+    let [a,b,c,d,e,f,g,h]=H;
+    for(let i=0;i<64;i++){
+      const S1=right(e,6)^right(e,11)^right(e,25),ch=(e&f)^(~e&g);
+      const t1=(h+S1+ch+SHA_K[i]+W[i])>>>0;
+      const S0=right(a,2)^right(a,13)^right(a,22),maj=(a&b)^(a&c)^(b&c);
+      const t2=(S0+maj)>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    for(let i=0,x=[a,b,c,d,e,f,g,h];i<8;i++)H[i]=(H[i]+x[i])>>>0;
+  }
+  return H.map(n=>n.toString(16).padStart(8,'0')).join('');
+ }
+ function updateSHA(){let value=$('#shaInput').value;$('#shaDigest').textContent=sha256(value);$('#shaNote').textContent=`输入长度：${Array.from(value).length} 字符 / ${new TextEncoder().encode(value).length} 字节 · 输出始终 64 个十六进制字符（256 位）。`}
+ $('#shaInput').addEventListener('input',updateSHA);updateSHA();
+ // Quantum amplitude amplification demonstration, N=16, M=1.
+ const theta=Math.asin(1/4),notes=[
+   '还没迭代：16 种结果完全均匀，命中率只有 1/16。',
+   '一次迭代：对目标翻转相位，再围绕平均幅度反射，目标概率显著提升。',
+   '两次迭代：目标概率已经超过 90%，但仍不是必定成功。',
+   '三次迭代：接近本例的最佳次数；继续迭代，概率还可能下降。'];
+ function renderGrover(){const t=Number($('#groverStep').value),p=Math.sin((2*t+1)*theta)**2;
+  $('#groverStepV').textContent=t;$('#groverPct').textContent=(100*p).toFixed(2)+'%';$('#groverBar').style.width=(100*p)+'%';$('#groverDesc').textContent=notes[t];
+  $$('#groverGrid .searchcell').forEach((c,i)=>{if(i===9){c.style.transform='scale('+(1+t*.028)+')';c.style.boxShadow='0 5px '+(8+t*8)+'px rgba(8,128,88,.19)'}else{c.style.opacity=String(1-t*.12)}});
+ }
+ $('#groverStep').addEventListener('input',renderGrover);renderGrover();
+ // LWE example: A=[[2,5],[7,3]], s=(3,2). With noise (1,-1), b=(0,9); without b=(16,10).
+ let noisy=true;
+ function renderLWE(){$('#noiseValue').textContent=noisy?'(1, -1)':'(0, 0)';$('#lweB').textContent=noisy?'b = (0,9)':'b = (16,10)';$('#lweGuess').textContent=noisy?'s′ = (8,7)':'s′ = (3,2)';$('#toggleNoise').textContent=noisy?'切换：暂时去掉误差':'切换：重新加入误差';$('#lweExplain').textContent=noisy?'攻击者知道 A 和 b，却不知道 e。如果错误地假设没有误差，按精确方程反推出的 (8,7) 与真正的 (3,2) 完全不同。':'移除误差后，这一组精确方程可以直接用有限域线性代数求解，恢复真实秘密 (3,2)。高维 LWE 正是利用未知误差改变求解难度。'}
+ $('#toggleNoise').addEventListener('click',()=>{noisy=!noisy;renderLWE()});renderLWE();
+ // Merkle tree illustrates an authentication path, not the complete SLH-DSA algorithm.
+ const positions={root:[340,45],p0:[170,119],p1:[510,119],l0:[100,204],l1:[240,204],l2:[440,204],l3:[580,204]};
+ function renderMerkle(chosen=1){const svg=$('#merkleSvg');svg.replaceChildren();
+  const leaf='l'+chosen,parent=chosen<=1?'p0':'p1',opposite=chosen<=1?'p1':'p0',sibling='l'+(chosen^1);
+  const edges=[['root','p0'],['root','p1'],['p0','l0'],['p0','l1'],['p1','l2'],['p1','l3']];
+  edges.forEach(([a,b])=>{const selected=(a==='root'&&b===parent)||(a===parent&&b===leaf);svg.appendChild(svgEl('line',{x1:positions[a][0],y1:positions[a][1]+13,x2:positions[b][0],y2:positions[b][1]-13,stroke:selected?'#329778':'#b1c8d1','stroke-width':selected?3:1.8}))});
+  Object.entries(positions).forEach(([key,[x,y]])=>{
+   const selected=['root',parent,leaf].includes(key),auth=[opposite,sibling].includes(key);
+   const rect=svgEl('rect',{x:x-41,y:y-19,width:82,height:38,rx:10,class:selected?'selected':auth?'auth':'node'});svg.appendChild(rect);
+   const t=svgEl('text',{x,y:y+4,'text-anchor':'middle'});t.textContent=key==='root'?'ROOT':key==='p0'?'H01':key==='p1'?'H23':key.toUpperCase();svg.appendChild(t)
+  });
+  const tip=svgEl('text',{x:340,y:254,'text-anchor':'middle',fill:'#687b8e'});tip.textContent='绿色 = 证明链　金色 = 认证旁支';svg.appendChild(tip);
+  $('#merkleText').textContent=`验证 L${chosen} 时，除了该叶子，还需要 L${chosen^1} 的哈希，以及另一半子树 ${opposite==='p0'?'H01':'H23'} 的哈希。按顺序向上计算，最终比较 ROOT。`;
+ }
+ $$('.leaf-btn').forEach(btn=>btn.addEventListener('click',()=>renderMerkle(Number(btn.dataset.leaf))));renderMerkle();
+ // Multiple-choice self-test, stored locally.
+ function updateQuiz(){let answered=0,correct=0;
+  $$('.question').forEach((q,i)=>{const choice=get('quiz_'+i);if(choice){answered++;if(choice===q.dataset.correct)correct++;q.querySelectorAll('.choice').forEach(b=>{b.classList.toggle('chosen',b.dataset.answer===choice);b.classList.toggle('wrong',b.dataset.answer===choice&&choice!==q.dataset.correct)});const result=q.querySelector('.quiz-result');result.classList.add('show');result.textContent=(choice===q.dataset.correct?'✓ 正确。':'✗ 还可以再想想。')+result.dataset.explain}});
+  $('#quizScore').textContent=answered?'已作答 '+answered+' / 6 · 正确 '+correct+' 题':'答题情况：尚未开始';
+ }
+ $$('.question').forEach((q,i)=>q.querySelectorAll('.choice').forEach(btn=>btn.addEventListener('click',()=>{set('quiz_'+i,btn.dataset.answer);updateQuiz()})));updateQuiz();
+ $('#exportNotes').addEventListener('click',()=>{
+  const titles=Object.fromEntries($$('section.chapter[data-key]').map(s=>[s.dataset.key,s.querySelector('h2').textContent]));
+  const lines=['# 密码学 × 量子计算｜我的费曼学习笔记','','导出时间：'+new Date().toLocaleString('zh-CN'),''];
+  algos.forEach(k=>{lines.push('## '+titles[k],get('master_'+k)==='1'?'状态：已掌握':'状态：待复述','','我的解释：',get('note_'+k)||'（尚未填写）','')});
+  lines.push('## 最终讲解',get('note_finalNarrative')||'（尚未填写）','', '## 自测结果');
+  $$('.question').forEach((q,i)=>{lines.push((i+1)+'. '+q.querySelector('p').textContent, '我的选择：'+(get('quiz_'+i)||'未作答')+' / 正确答案：'+q.dataset.correct)});
+  lines.push('','备注：教学算例不应当用于生产安全。');
+  const blob=new Blob([lines.join('\n')],{type:'text/markdown;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='密码学_量子计算_费曼学习笔记.md';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ });
+ window.cryptolabSelfTest={powmod,pointMul,pointAdd,sha256};
+})();
+
+</script>
+</body></html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Buck 降压电路 · 12V 如何变成稳定 5V</title>
+<style>
+:root{color-scheme:light;--ink:#18283b;--muted:#617083;--b:#d9e3ee;--green:#078f87;--blue:#2d79c7;--amber:#e78c19;--red:#d45c50;--bg:#f4f7fb;--bg2:#ebf3f8}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"PingFang SC","Noto Sans CJK SC",sans-serif;color:var(--ink);background:linear-gradient(145deg,#f2f8f9,#f5f5fb 75%)}
+main{width:min(1020px,100%);margin:auto;padding:20px 14px 45px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.eyebrow{color:var(--green);font-weight:800;font-size:12px;letter-spacing:2px}.title{font-size:clamp(23px,4vw,37px);line-height:1.28;margin:5px 0 8px;font-weight:850;letter-spacing:-.6px}.intro{margin:0 0 16px;color:#637588;font-size:14px;line-height:1.65}
+.panel{background:#fff;border:1px solid #dde6ef;border-radius:20px;box-shadow:0 9px 30px #16304a0b;padding:16px;margin:12px 0;overflow:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:7px}.sectionTitle{font-weight:800;font-size:16px}.phase{border-radius:999px;background:#ddf7f1;color:#00796f;padding:7px 12px;font-weight:800;font-size:13px}.phase.off{background:#fff1dc;color:#a35f06}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 6px}.stat{background:#f3f7fa;border:1px solid #eaf0f4;border-radius:12px;padding:10px}.stat .k{color:var(--muted);font-size:11px;margin-bottom:5px}.stat .v{font-size:clamp(16px,2.7vw,23px);font-weight:850;font-variant-numeric:tabular-nums;white-space:nowrap}.stat.vout{background:#eaf9f3;border-color:#cfeee1}.stat.vout .v{color:#08725f}
+.diagram{width:100%;display:block;overflow:visible;max-height:355px}.wire{fill:none;stroke:#334b5f;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}.sym{stroke:#274457;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;fill:none}.node{fill:#1f4559}.d-label{fill:#445e73;font-size:15px;font-weight:700}.little{font-size:12px;fill:#647689}.ann{font-size:15px;font-weight:850}.switch-line{stroke-width:5;stroke-linecap:round}.pulse{fill:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;opacity:.35}.glowdot{filter:drop-shadow(0 0 3px currentColor)}
+.explain{display:flex;align-items:flex-start;gap:8px;background:#f1f8f8;border:1px solid #dbeeed;border-radius:13px;padding:11px 13px;font-size:13px;line-height:1.65;min-height:68px}.explain.off{background:#fffbf2;border-color:#f5e5ca}.explain b{font-size:14px}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px}.btn{border:1px solid #d5e0eb;background:#fff;color:#26455c;padding:9px 12px;border-radius:11px;font-weight:750;cursor:pointer;font-size:13px}.btn.primary{color:white;border-color:#14766f;background:#078f87}.btn:active{transform:scale(.98)}.btn:focus-visible,input:focus-visible{outline:3px solid #78cbd0;outline-offset:2px}
+.scrub{display:flex;align-items:center;gap:12px;margin:15px 0 1px}.scrub span{font-size:12px;color:#6a7b8c;flex-shrink:0}.scrub input{flex:1}
+small.note{display:block;color:#718196;line-height:1.5;margin-top:5px}
+.scope{width:100%;display:block;height:290px;border-radius:12px;background:#fbfdff;border:1px solid #edf1f7}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:#596b7e}.tag{display:inline-flex;align-items:center;gap:5px}.swatch{width:10px;height:10px;border-radius:50%}
+.formulas{display:grid;grid-template-columns:1fr 1fr;gap:10px}.eq{border-radius:12px;padding:13px;background:#f5f8fc;font-size:13px;line-height:1.8}.eq b{display:block;font-size:14px;margin-bottom:4px}.eq.on{border-left:4px solid #088f87}.eq.off{border-left:4px solid #e78c19}
+.settings{display:grid;grid-template-columns:1fr 1fr;gap:14px}.setting{display:grid;gap:7px}.sethead{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700}.number{color:#057d71}.setting input{width:100%}.feedback{grid-column:1/-1;display:flex;align-items:center;gap:9px;border-top:1px solid #e6edf3;padding-top:11px;font-size:13px;line-height:1.55}.feedback input{width:18px;height:18px;accent-color:#06877b;flex-shrink:0}.label-note{grid-column:1/-1;font-size:12px;color:#617487;line-height:1.65;margin-top:-5px}
+.foot{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.footbox{padding:12px;border:1px solid #e2eaf2;border-radius:13px;background:#f7fafd;line-height:1.7;font-size:13px}.footbox strong{display:block;margin-bottom:4px;font-size:14px}.footbox strong span{margin-right:6px}.subnote{font-size:12px;color:#68798d;line-height:1.75}
+@media(max-width:650px){main{padding:14px 9px 36px}.panel{padding:12px;border-radius:16px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.formulas{grid-template-columns:1fr}.foot{grid-template-columns:1fr}.title{font-size:24px}.diagram{min-height:206px}.d-label{font-size:14px}.scope{height:260px}.settings{gap:10px}}
+</style>
+</head>
+<body>
+<main>
+<header class="header"><div><div class="eyebrow">INTERACTIVE ELECTRONICS · 交互电路实验室</div><h1 class="title">Buck：12V 为什么能变成 5V？</h1><p class="intro">观察一个开关周期：蓝绿色表示<strong>导通储能</strong>，橙色表示<strong>关断续流</strong>。下面的时间被放慢了，真实开关每秒动作 50,000 次。</p></div></header>
+<section class="panel">
+<div class="topbar"><span class="sectionTitle">01 / 电流究竟从哪里流？</span><span class="phase" id="phasePill">● MOS 开关导通 · ON</span></div>
+<div class="stats"><div class="stat"><div class="k">开关节点 V<sub>SW</sub></div><div class="v" id="vSW">12.0 V</div></div><div class="stat"><div class="k">电感两端 V<sub>L</sub>（左−右）</div><div class="v" id="vL">+7.0 V</div></div><div class="stat"><div class="k">电感电流 i<sub>L</sub></div><div class="v" id="iL">0.21 A</div></div><div class="stat vout"><div class="k">输出 V<sub>out</sub></div><div class="v" id="vOut">5.000 V</div></div></div>
+<svg class="diagram" id="diagram" viewBox="0 0 800 340" role="img" aria-label="Buck电路，12V 电源、MOS开关、续流二极管、电感、电容、负载，导通或关断时高亮电流路径">
+<defs><marker id="arG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#00978b"/></marker><marker id="arO" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#f09a24"/></marker></defs>
+<path class="wire" d="M68 100 H178 M250 100 H330 M450 100 H680 V155 M680 249 V287 H68 V222 M277 100 V175 M277 231 V287 M540 100 V183 M540 230 V287"/>
+<!-- decorative energy loops: only overlays, not extra electrical connections -->
+<path id="onLoop" class="pulse" stroke="#08a493" d="M68 100 H178 L250 100 H330 H450 H680 V155 V249 V287 H68 V222"/>
+<path id="offLoop" class="pulse" stroke="#ef9a22" d="M277 287 V231 V175 V100 H330 H450 H680 V155 V249 V287 H277"/>
+<!-- battery -->
+<rect x="38" y="122" width="60" height="100" rx="12" fill="#e2f7ec" stroke="#43856b" stroke-width="2.5"/><text x="68" y="159" text-anchor="middle" font-size="28" font-weight="800" fill="#08745a">+</text><text id="vinBat" x="68" y="185" text-anchor="middle" font-size="20" font-weight="800" fill="#0a725a">12V</text><text x="68" y="209" text-anchor="middle" font-size="22" fill="#08745a">−</text><path class="wire" d="M68 100 V122 M68 222 V287"/>
+<!-- controllable mos switch -->
+<circle class="node" cx="178" cy="100" r="6"/><circle class="node" cx="250" cy="100" r="6"/><line id="switchBlade" x1="178" y1="100" x2="249" y2="100" class="switch-line" stroke="#078f87"/><text x="210" y="60" class="d-label" text-anchor="middle">MOS 高侧开关</text><text x="210" y="80" class="little" text-anchor="middle" id="switchNote">导通</text>
+<!-- diode cathode toward switch node, anode ground -->
+<path d="M259 184 H295" class="sym"/><path d="M263 225 L277 191 L291 225 Z" fill="#e1effa" stroke="#274457" stroke-width="2.8"/><path d="M277 175 V184 M277 225 V231" class="sym"/><text x="224" y="255" class="d-label" text-anchor="middle">D 续流二极管</text><text id="diodeLabel" x="222" y="274" text-anchor="middle" class="little">截止</text>
+<!-- inductor -->
+<path d="M330 100 Q339 70 349 100 Q359 70 369 100 Q379 70 389 100 Q399 70 409 100 Q419 70 429 100 L450 100" class="sym"/><text x="390" y="60" text-anchor="middle" class="d-label">电感 L = 100 μH</text><text x="391" y="145" text-anchor="middle" class="little">iL 始终朝右 →</text>
+<!-- capacitor -->
+<path d="M513 183 H567 M513 230 H567" class="sym" stroke-width="5"/><path class="wire" d="M540 100 V183 M540 230 V287"/><text x="540" y="250" text-anchor="middle" class="d-label">C</text><text x="540" y="266" text-anchor="middle" class="little">220 μF</text><text x="498" y="171" class="little" text-anchor="end" id="capDesc">充 / 放电</text>
+<!-- resistor -->
+<path d="M680 155 l-13 10 26 14 -26 14 26 14 -26 14 26 14 -13 14" class="sym"/><text x="719" y="196" class="d-label">负载</text><text x="719" y="218" class="little">10 Ω</text>
+<path d="M638 287 V297 M623 297 H653 M628 303 H648 M633 309 H643" class="sym" stroke-width="2"/>
+<circle cx="277" cy="100" r="5" class="node"/><circle cx="540" cy="100" r="5" class="node"/><circle cx="680" cy="100" r="5" class="node"/>
+<text x="277" y="77" text-anchor="middle" class="d-label">VSW</text><text x="557" y="77" class="d-label" fill="#087d74">Vout ≈ 5V</text>
+<!-- direction arrows -->
+<line id="flowArrow" x1="450" y1="123" x2="489" y2="123" stroke="#00978b" stroke-width="3" marker-end="url(#arG)"/>
+<g id="particles"></g>
+</svg>
+<div class="explain" id="explain"><div style="font-size:19px">⚡</div><div id="phaseExpl"><b>ON：电源给电感和负载供能。</b> VSW ≈ VIN；电感左端比右端高，iL 持续增加。电容根据 iL 与负载电流的差值充放电。</div></div>
+<div class="controls"><button class="btn primary" id="toggle">❚❚ 暂停</button><button class="btn" id="showOn">只看导通</button><button class="btn" id="showOff">只看关断</button><button class="btn" id="restart">↻ 重播周期</button></div>
+<div class="scrub"><span>0 μs</span><input id="scrub" type="range" min="0" max="999" value="0" aria-label="拖动查看一个开关周期"><span>20 μs</span></div><small class="note">可以暂停，或拖动进度条看电流如何连续变化。动态粒子表示<strong>约定电流方向</strong>，不是电子运动方向。</small>
+</section>
+<section class="panel"><div class="topbar"><span class="sectionTitle">02 / 同一时刻的四条波形</span><span class="phase" style="background:#e6efff;color:#3364ae">横轴：一个 20 μs 周期</span></div><canvas id="scope" class="scope" aria-label="同步显示开关节点电压、电感电压、电感电流、输出电压纹波"></canvas><div class="legend"><span class="tag"><span class="swatch" style="background:#3b82bd"></span>开关电压：矩形</span><span class="tag"><span class="swatch" style="background:#b878cb"></span>电感电压：正负交替</span><span class="tag"><span class="swatch" style="background:#079886"></span>电感电流：三角波</span><span class="tag"><span class="swatch" style="background:#e78c19"></span>输出电压：小纹波</span></div><small class="note">最下面的输出电压为了让你看见纹波，<strong>纵轴被单独放大到毫伏量级</strong>，并不是从 0V 大幅震荡到 5V。计算忽略开关损耗、电容 ESR 与控制环路瞬态。</small></section>
+<section class="panel"><div class="topbar"><span class="sectionTitle">03 / 自己调整，验证 5V 从哪里来</span></div><div class="settings"><label class="setting"><span class="sethead"><span>输入电压 VIN</span><span id="vinValue" class="number">12 V</span></span><input id="vin" type="range" min="8" max="18" step="1" value="12"></label><label class="setting"><span class="sethead"><span>PWM 占空比 D</span><span id="dValue" class="number">41.7%</span></span><input id="duty" type="range" min="25" max="75" step="1" value="42"></label><label class="feedback"><input type="checkbox" id="feedback" checked><span><strong>理想反馈调节</strong>：自动调整占空比以保持目标 5V。先关闭它，再拖动占空比，观察输出电压怎样改变。</span></label><div id="feedbackHint" class="label-note">已开启：VIN=12V 时，D≈5/12=41.7%，理想稳态输出约为 5V。</div></div></section>
+<section class="panel"><div class="topbar"><span class="sectionTitle">04 / 三个元件，三种不同的工作</span></div><div class="foot"><div class="footbox"><strong><span>①</span>开关：切割时间</strong>输入不直接变 5V；VSW 在 VIN 与约 0V 之间高速切换。改变 ON 时间比例就改变平均能量传递。</div><div class="footbox"><strong><span>②</span>电感：平滑电流</strong>ON 时 VL 为正，iL 斜坡上升；OFF 时 VL 为负，iL 斜坡下降，但继续向负载流动。</div><div class="footbox"><strong><span>③</span>电容：平滑电压</strong>当 iL 高于负载电流，电容吸收多余电流；低于负载电流时，电容补上缺口。</div></div><p class="subnote">这里采用<strong>非同步 Buck（高侧开关 + 续流二极管）</strong>，若实际电路用低侧 MOSFET 代替二极管，就是同步 Buck，电流回路的核心原理相同。真实 Buck 输出取决于负载、开关频率、L/C 参数、器件损耗及反馈补偿；电压平均值公式只适用于理想连续导通模式。开关断开也不会像没有续流通路的纯串联 RL 一样任意产生高压：续流二极管把 VSW 钳在接近 0V（实际约 −VD），但仍需控制 PCB 寄生电感引起的尖峰。</p></section>
+</main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id), vinEl=$('vin'),dEl=$('duty'),feedback=$('feedback'),scope=$('scope');
+const svg=$('diagram'),onLoop=$('onLoop'),offLoop=$('offLoop'),part=$('particles');
+const points=[];
+for(let k=0;k<6;k++){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('r','4.5');c.setAttribute('fill','#00978b');c.setAttribute('class','glowdot');part.appendChild(c);points.push(c)}
+let phase=0.08,running=true,last=0,mode='auto',series=[],config={},ripple=0, iC=0;
+const T=20e-6,L=100e-6,C=220e-6,R=10,N=800;
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+function calc(){let vin=+vinEl.value;let D=feedback.checked?5/vin:+dEl.value/100;D=clamp(D,.08,.92);let out=vin*D, iAvg=out/R;let di=(vin-out)*D*T/L;let min=iAvg-di/2;let values=[],vint=0;
+for(let j=0;j<=N;j++){let s=j/N;let il=s<D?min+(vin-out)*s*T/L:min+di-out*(s-D)*T/L;let ic=il-iAvg;if(j>0){let prv=values[j-1].ic;vint+=(ic+prv)/2/C*(T/N)}values.push({s,vs:s<D?vin:0,vl:s<D?vin-out:-out,il,ic,volt:vint})}
+const mean=values.reduce((a,b)=>a+b.volt,0)/values.length;for(const v of values)v.volt=out+v.volt-mean;
+series=values;const vmin=Math.min(...values.map(z=>z.volt)),vmax=Math.max(...values.map(z=>z.volt));ripple=(vmax-vmin)*1000;config={vin,D,out,iAvg,di,min,voltmin:vmin,voltmax:vmax};
+$('duty').disabled=feedback.checked; $('duty').style.opacity=feedback.checked?'.5':'1'; if(feedback.checked)dEl.value=Math.round(D*100);$('vinValue').textContent=vin+' V';$('dValue').textContent=(D*100).toFixed(1)+'%';$('vinBat').textContent=vin+'V';$('feedbackHint').textContent=feedback.checked?`理想反馈稳态：VIN=${vin}V，自动设定 D≈5/${vin}=${(D*100).toFixed(1)}%，输出约 5V。`: `无反馈、固定占空比：Vout≈${vin}×${(D*100).toFixed(1)}%=${out.toFixed(2)}V；输入变化时输出也会跟着变。`;
+if(mode==='on')phase=D/2;if(mode==='off')phase=(1+D)/2;
+paint();
+}
+function sample(p){let idx=clamp(Math.round(p*N),0,N);return series[idx]}
+function paint(){if(!series.length)return;let {vin,D,out,di}=config;let v=sample(phase);let on=phase<D;let vL=on?vin-out:-out;
+$('phasePill').textContent=on?'● MOS 开关导通 · ON':'● MOS 开关关断 · OFF';$('phasePill').className='phase'+(on?'':' off');$('vSW').textContent=(on?vin:0).toFixed(1)+' V';$('vL').textContent=(vL>=0?'+':'')+vL.toFixed(1)+' V';$('iL').textContent=v.il.toFixed(3)+' A';$('vOut').textContent=v.volt.toFixed(3)+' V';
+$('switchBlade').setAttribute('y2',on?'100':'65');$('switchBlade').setAttribute('x2',on?'250':'229');$('switchBlade').setAttribute('stroke',on?'#078f87':'#d98220');$('switchNote').textContent=on?'接通 · VIN 接到电感':'断开 · 与 VIN 分离';$('diodeLabel').textContent=on?'反向偏置 · 截止':'导通 · 电感有回路';$('diodeLabel').setAttribute('fill',on?'#637689':'#c1790e');
+$('onLoop').setAttribute('opacity',on?'.72':'0');$('offLoop').setAttribute('opacity',on?'0':'.72');$('flowArrow').setAttribute('stroke',on?'#00978b':'#f09a24');$('flowArrow').setAttribute('marker-end',on?'url(#arG)':'url(#arO)');
+const charging=v.ic>0;$('capDesc').textContent=charging?`充电 ↑ ${Math.abs(v.ic).toFixed(2)}A`:`放电 ↓ ${Math.abs(v.ic).toFixed(2)}A`;
+$('explain').className='explain'+(on?'':' off');$('phaseExpl').innerHTML=on?`<b>ON：电源推动电感电流上升。</b> 电感左端约 ${vin}V、右端约 ${out.toFixed(1)}V，故 V<sub>L</sub>≈+${(vin-out).toFixed(1)}V，i<sub>L</sub> 按斜坡上升。此刻电容${charging?'吸收多余的电流（充电）':'给负载补足电流（放电）'}。`:`<b>OFF：电感仍然向右给负载供电。</b> 二极管接通续流回路，左端 V<sub>SW</sub>≈0V，右端约 ${out.toFixed(1)}V，所以 V<sub>L</sub>≈−${out.toFixed(1)}V；i<sub>L</sub> 连续但缓慢下降。电容此刻${charging?'充电':'放电'}。`;
+$('scrub').value=Math.floor(phase*999);
+const path=on?onLoop:offLoop;let length=path.getTotalLength();for(let k=0;k<points.length;k++){let loc=((phase*5+k/points.length)%1)*length;let xy=path.getPointAtLength(loc);points[k].setAttribute('cx',xy.x);points[k].setAttribute('cy',xy.y);points[k].setAttribute('fill',on?'#08a493':'#ef9a22')}
+drawScope();
+}
+function drawScope(){const ratio=window.devicePixelRatio||1;const cssWidth=scope.getBoundingClientRect().width||850;const cssHeight=scope.getBoundingClientRect().height||290;const W=Math.round(cssWidth*ratio),H=Math.round(cssHeight*ratio);if(scope.width!==W||scope.height!==H){scope.width=W;scope.height=H}const ctx=scope.getContext('2d');ctx.setTransform(ratio,0,0,ratio,0,0);const w=cssWidth,h=cssHeight;ctx.clearRect(0,0,w,h);
+const left=w<470?66:102,right=12,top=16,bottom=20,rowH=(h-top-bottom)/4,ww=w-left-right;
+// faint duty shading
+ctx.fillStyle='#e8f8f4';ctx.fillRect(left,top,ww*config.D,h-top-bottom);ctx.fillStyle='#fff6e9';ctx.fillRect(left+ww*config.D,top,ww*(1-config.D),h-top-bottom);
+let specs=[{n:'VSW',u:'V',col:'#3984c1',f:x=>x.vs,lo:-.5,hi:config.vin+1.5,label:'12 / 0V'},{n:'VL',u:'V',col:'#aa66c0',f:x=>x.vl,lo:-config.out-2,hi:config.vin-config.out+2,label:'正 / 负'},{n:'iL',u:'A',col:'#078f87',f:x=>x.il,lo:Math.max(0,config.min-config.di*.25),hi:config.min+config.di*1.25,label:'三角波'},{n:'Vout',u:'V',col:'#dc841b',f:x=>x.volt,lo:config.voltmin-ripple/1000*.3,hi:config.voltmax+ripple/1000*.3,label:`纹波 ${ripple.toFixed(1)}mV`}];
+ctx.font='11px system-ui, sans-serif';ctx.textAlign='left';
+specs.forEach((sp,i)=>{let y=top+i*rowH;ctx.strokeStyle='#dae4ed';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left,y+rowH-3);ctx.lineTo(w-right,y+rowH-3);ctx.stroke();ctx.fillStyle='#425c72';ctx.font='bold 12px system-ui, sans-serif';ctx.fillText(sp.n,10,y+18);ctx.fillStyle='#84919b';ctx.font='10px system-ui, sans-serif';ctx.fillText(sp.label,10,y+35);let ptY=z=>y+8+(1-(z-sp.lo)/(sp.hi-sp.lo))*(rowH-18);ctx.beginPath();for(let j=0;j<series.length;j++){let v=series[j],px=left+v.s*ww,py=ptY(sp.f(v));if(j===0)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.strokeStyle=sp.col;ctx.lineWidth=2.4;ctx.stroke();let v=sample(phase);ctx.beginPath();ctx.arc(left+phase*ww,ptY(sp.f(v)),4,0,Math.PI*2);ctx.fillStyle=sp.col;ctx.fill()});
+let mx=left+phase*ww;ctx.beginPath();ctx.setLineDash([4,4]);ctx.moveTo(mx,top);ctx.lineTo(mx,h-bottom+3);ctx.strokeStyle='#37495f';ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+ctx.fillStyle='#6f7f8e';ctx.font='10px system-ui, sans-serif';ctx.textAlign='left';ctx.fillText('0',left,h-4);ctx.textAlign='center';ctx.fillText((config.D*20).toFixed(1)+'μs',left+config.D*ww,h-4);ctx.textAlign='right';ctx.fillText('20μs',w-right,h-4);
+}
+function tick(ts){if(!last)last=ts;let dt=Math.min(ts-last,120);last=ts;if(running){phase=(phase+dt/4200)%1;paint()}requestAnimationFrame(tick)}
+function pause(){running=false;mode='manual';$('toggle').textContent='▶ 继续播放';$('toggle').className='btn primary'}
+function play(){running=true;mode='auto';$('toggle').textContent='❚❚ 暂停';last=0}
+$('toggle').addEventListener('click',()=>running?pause():play());$('showOn').addEventListener('click',()=>{pause();mode='on';phase=config.D/2;paint()});$('showOff').addEventListener('click',()=>{pause();mode='off';phase=(1+config.D)/2;paint()});$('restart').addEventListener('click',()=>{phase=0;play();paint()});$('scrub').addEventListener('input',e=>{pause();phase=+e.target.value/999;paint()});vinEl.addEventListener('input',calc);dEl.addEventListener('input',calc);feedback.addEventListener('change',calc);window.addEventListener('resize',drawScope);
+calc();requestAnimationFrame(tick);
+})();
+</script>
+</body></html>
