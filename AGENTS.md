@@ -3,21 +3,24 @@
 ## Goal
 Publish clear, accurate, accessible, and maintainable educational material.
 
-## Source boundary
-The private knowledge repository is a source of proposed learning insights, not a direct publication feed.
-Never copy private notes, chat transcripts, or attachments wholesale.
+## Privacy boundary
+The private knowledge repository provides proposed insights, not a direct publishing feed.
+Never copy private notes, chat transcripts, or attachments wholesale into this public repository.
 
-## Update protocol
-1. Read the existing lesson before editing it.
-2. Preserve working interactions, diagrams, mathematical notation, and explanatory continuity.
-3. Make minimal, focused edits and keep evidence for technical corrections.
-4. Validate internal links, navigation, mobile layout, accessibility and publication routes.
-5. Record source and destination for migrations.
-6. Propose reviewed changes through a pull request whenever possible.
-7. Do not silently delete prior lessons or overwrite substantial content.
+## Editorial rules
+1. Read an existing lesson in full before editing.
+2. Preserve interactive diagrams, mathematics, worked examples and teaching continuity.
+3. Prefer focused changes; justify and review substantial rewrites.
+4. Check internal links, page navigation, mobile layout, accessibility and deployment routes.
+5. Preserve provenance and verify technical claims.
+6. Prefer reviewable pull requests to direct publishing.
+7. Do not delete working learning material without explicit approval.
 
-## Current deployment
-- Current site source: `docs/` on the `main` branch.
-- Pages configuration: Settings -> Pages -> Deploy from a branch -> main -> /docs.
-- Preserve `docs/.nojekyll` for raw HTML publication.
-- A later migration to Astro + Starlight may change the build source after validation.
+## Site layout and deployment
+- **Canonical site pages live at repository root** on `main`.
+- Pages is currently built from the repository root according to deployment logs.
+- Pages Settings -> Deploy from a branch -> main -> /(root).
+- Keep `.nojekyll` at the repository root.
+- `docs/` contains temporary migration snapshots; do not update it instead of the root site.
+- Execute `python3 scripts/check_static_links.py .` before publishing.
+- If switching to Astro + Starlight, update the publishing workflow and validation together.
