@@ -4,12 +4,20 @@ on:
   push:
     branches: [main]
     paths:
-      - 'docs/**'
+      - 'index.html'
+      - '.nojekyll'
+      - 'cryptography/**'
+      - 'buck-5v/**'
+      - 'learning-lab/**'
       - 'scripts/check_static_links.py'
       - '.github/workflows/validate-static-site.yml'
   pull_request:
     paths:
-      - 'docs/**'
+      - 'index.html'
+      - '.nojekyll'
+      - 'cryptography/**'
+      - 'buck-5v/**'
+      - 'learning-lab/**'
       - 'scripts/check_static_links.py'
       - '.github/workflows/validate-static-site.yml'
   workflow_dispatch:
@@ -22,5 +30,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate local routes and assets
-        run: python3 scripts/check_static_links.py docs
+      - name: Validate root site routes and assets
+        run: python3 scripts/check_static_links.py .
