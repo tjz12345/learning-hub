@@ -64,5 +64,5 @@ def verify(root: Path) -> int:
 
 
 if __name__ == "__main__":
-    directory = Path(sys.argv[1] if len(sys.argv) > 1 else "docs")
+    directory = Path(sys.argv[1] if len(sys.argv) > 1 else ".")
     raise SystemExit(verify(directory))
