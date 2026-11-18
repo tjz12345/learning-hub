@@ -1,32 +1,40 @@
 # GitHub Pages Migration Record
 
-## Source
-Repository: `tjz12345/image-prompt-reverse`
-Branch: `gh-pages`
-Source files are retained and not modified.
+## Legacy source
+- Repository: `tjz12345/image-prompt-reverse`
+- Branch: `gh-pages`
+- Original files remain unchanged.
 
-## Target
-Repository: `tjz12345/learning-hub`
-Branch: `main`
-Publish directory: `docs/`
+## New destination
+- Repository: `tjz12345/learning-hub`
+- Branch: `main`
+- **Published site directory: repository root (`/`)**
 
-| Original path | New path |
+| Old path | Published path |
 | --- | --- |
-| `index.html` | `docs/cryptography/index.html` |
-| `buck-5v/index.html` | `docs/buck-5v/index.html` |
-| `learning-lab/index.html` | `docs/learning-lab/index.html` |
-| `learning-lab/electricity-foundations/index.html` | `docs/learning-lab/electricity-foundations/index.html` |
+| `index.html` | `cryptography/index.html` |
+| `buck-5v/index.html` | `buck-5v/index.html` |
+| `learning-lab/index.html` | `learning-lab/index.html` |
+| `learning-lab/electricity-foundations/index.html` | `learning-lab/electricity-foundations/index.html` |
 
-The new `docs/index.html` is a curated learning-portal entry page. The one original
-cross-link pointing to the old Buck URL in the electronics lesson was updated to
-a relative link inside the new public repository.
+A new homepage was added as `index.html`.
+The single legacy hardcoded Buck link inside the electronics lesson was rewritten to the new relative URL.
 
-## Activation required
-An administrator must open **Settings -> Pages** in the destination repository,
-choose **Deploy from a branch**, branch **main**, folder **/docs**, then save.
+## First-deployment 404 and correction
+The initial import placed files exclusively in `docs/`, but the GitHub Pages build was processing the **repository root**.
+The deployment succeeded technically, yet `/learning-hub/` had no root `index.html` and produced a 404.
 
-Expected default URL after publishing:
-https://tjz12345.github.io/learning-hub/
+Fix commit `8b70ceb30e71adf63a5c55e816c7cddb75f9190d` placed the website files at the actual publishing root, preserving the original content and legacy `docs/` snapshots.
 
-Do not disable the old Pages site until the new routes have been smoke-tested.
-Custom domain setup is intentionally deferred to avoid breaking working URLs.
+The canonical authoring location is now the root. Do not maintain two divergent copies.
+Verify the live site and the four migrated routes before removing old backups.
+
+## Pages configuration
+Under Settings -> Pages choose:
+- Deploy from a branch
+- Branch: `main`
+- Folder: `/(root)`
+
+Default site URL: https://tjz12345.github.io/learning-hub/
+
+Custom domain setup is deferred. Do not remove the old Pages site before live validation.
